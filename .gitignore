@@ -1,0 +1,19 @@
+node_modules
+package-lock.json
+dist
+stats.html
+Testing
+yarn-error.log
+
+# vim
+*~
+*.swp
+
+# vscode
+.vscode
+
+# idea
+.idea
+
+# npm: use only warn lock file
+package-lock.json
