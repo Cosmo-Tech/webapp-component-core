@@ -1,7 +1,7 @@
 {
   "name": "@cosmotech/core",
   "private": false,
-  "version": "1.1.1",
+  "version": "1.1.1-beta.0",
   "description": "",
   "main": "src/index.js",
   "scripts": {
