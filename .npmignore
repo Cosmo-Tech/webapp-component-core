@@ -1,6 +1,7 @@
 # folder
 assets
 src
+node_modules
 
 # vscode
 .vscode
@@ -12,5 +13,6 @@ src
 rollup.*
 .babelrc
 babel.config.js
-.eslintrc
+.eslintrc.*
+.nvmrc
 stats.html
