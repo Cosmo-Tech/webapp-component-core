@@ -36,6 +36,6 @@
     "rollup": "^2.34.2",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.0",
-    "rollup-plugin-visualizer": "^4.2.0"
+    "rollup-plugin-visualizer": "^5.5.0"
   }
 }
