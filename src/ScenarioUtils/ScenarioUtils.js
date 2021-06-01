@@ -1,7 +1,12 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
 
-const scenarioExists = (scenarioName, scenarioTree) => {
+const scenarioExistsInList = (scenarioName, scenarioList) => {
+  scenarioName = scenarioName.trim();
+  return scenarioList.find(scenario => scenario.name.trim() === scenarioName)
+};
+
+const scenarioExistsInTree = (scenarioName, scenarioTree) => {
   const treeSearch = (node) => {
     for (const scenario of node) {
       if (scenarioName.trim() === scenario.name.trim() || treeSearch(scenario.children)) {
@@ -31,8 +36,9 @@ const getScenarioTree = (scenarioList) => {
 };
 
 const ScenarioUtils = {
-  getScenarioTree,
-  scenarioExists
+  scenarioExistsInList,
+  scenarioExistsInTree,
+  getScenarioTree
 };
 
 export default ScenarioUtils
