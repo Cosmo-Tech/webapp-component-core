@@ -3,7 +3,7 @@
 
 const scenarioExistsInList = (scenarioName, scenarioList) => {
   scenarioName = scenarioName.trim();
-  return scenarioList.find(scenario => scenario.name.trim() === scenarioName)
+  return scenarioList.find(scenario => scenario.name.trim() === scenarioName) !== undefined;
 };
 
 const scenarioExistsInTree = (scenarioName, scenarioTree) => {
