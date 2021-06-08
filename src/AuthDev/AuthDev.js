@@ -1,50 +1,50 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
 
-const name = 'auth-dev'
-let authData = null
+const name = 'auth-dev';
+let authData = null;
 
 function setDefaultUser () {
   authData = {
     userId: 1,
     userName: 'le dev'
-  }
+  };
 }
 
 function signIn () {
-  setDefaultUser()
-  window.location.href = '/'
+  setDefaultUser();
+  window.location.href = '/';
 }
 
 function signOut () {
-  window.location.href = '/'
+  window.location.href = '/';
 }
 
 function isAsync () {
-  return false
+  return false;
 }
 
 function isUserSignedIn () {
-  setDefaultUser()
-  return true
+  setDefaultUser();
+  return true;
 }
 
 function getUserName () {
   if (authData) {
-    return authData.userName
+    return authData.userName;
   }
-  return undefined
+  return undefined;
 }
 
 function getUserId () {
   if (authData) {
-    return authData.userId
+    return authData.userId;
   }
-  return undefined
+  return undefined;
 }
 
 function getUserPicUrl () {
-  return undefined
+  return undefined;
 }
 
 const AuthDev = {
@@ -56,5 +56,5 @@ const AuthDev = {
   getUserId,
   getUserPicUrl,
   isAsync
-}
-export default AuthDev
+};
+export default AuthDev;
