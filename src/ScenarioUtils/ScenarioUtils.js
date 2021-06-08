@@ -19,13 +19,13 @@ const scenarioExistsInTree = (scenarioName, scenarioTree) => {
 };
 
 const getScenarioTree = (scenarioList) => {
-  scenarioList.sort()
+  scenarioList.sort();
   const scenarioTree = [];
   for (const parentScenario of scenarioList) {
     if (parentScenario.parentId === undefined) {
       scenarioTree.push(parentScenario);
     }
-    parentScenario.children = []
+    parentScenario.children = [];
     for (const childScenario of scenarioList) {
       if (childScenario.parentId === parentScenario.id) {
         parentScenario.children.push(childScenario);
@@ -41,4 +41,4 @@ const ScenarioUtils = {
   getScenarioTree
 };
 
-export default ScenarioUtils
+export default ScenarioUtils;
