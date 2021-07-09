@@ -46,18 +46,14 @@ const constructDynamicFilters = (filtersConfig, obj) => {
   return result;
 };
 
-const constructScenarioDTO = (scenario, scenarioList) => {
+const constructScenarioDTO = (scenario) => {
   let result;
   if (scenario !== undefined) {
-    let masterId;
-    if (scenarioList != undefined) {
-      masterId = getMasterScenarioId(scenario,scenarioList);
-    }
     result = new ScenarioDTO(scenario.id,
         scenario.name,
         scenario.state,
         scenario?.lastRun?.csmSimulationRun,
-        masterId,
+        scenario.rootId,
         scenario.parentId,
         scenario.ownerId,
         scenario.solutionId)
@@ -65,26 +61,6 @@ const constructScenarioDTO = (scenario, scenarioList) => {
   return result;
 }
 
-// Return the id of the root scenario associated to the current scenario
-// If at some point a scenario ancestor of the current scenario can not be
-// found, then null is returned
-const getMasterScenarioId = (scenario, scenarioList) => {
-  if (scenario === null) {
-    return null;
-  }
-  let parentId = scenario.parentId;
-  let lastScenarioId = scenario.id;
-  while (parentId !== null) {
-    const parentScenario = scenarioList.find(el => el.id === parentId);
-    // Return null if the parent can not be found
-    if (parentScenario === undefined) {
-      return null;
-    }
-    parentId = parentScenario.parentId;
-    lastScenarioId = parentScenario.id;
-  }
-  return lastScenarioId;
-};
 
 export const PowerBIUtils = {
   constructDynamicFilters,
