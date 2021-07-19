@@ -1,6 +1,8 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
 
+export const DATASET_PARAM_VARTYPE = '%DATASETID%';
+
 const scenarioExistsInList = (scenarioName, scenarioList) => {
   scenarioName = scenarioName.trim();
   return scenarioList.find(scenario => scenario.name.trim() === scenarioName) !== undefined;
@@ -38,7 +40,28 @@ const getScenarioTree = (scenarioList, compareFn) => {
   return scenarioTree;
 };
 
+const constructParameterData = (param, value) => {
+  return {
+    parameterId: param.id,
+    varType: param.varType,
+    value: value != null ? value : param.defaultValue
+  };
+};
+
+const getValueFromParameters = (parameters, parameterToSelect) => {
+  if (parameters === null) {
+    return parameterToSelect.defaultValue;
+  }
+  const param = parameters.find(element => element.parameterId === parameterToSelect.id);
+  if (param !== undefined) {
+    return param.value;
+  }
+  return parameterToSelect.defaultValue;
+};
+
 const ScenarioUtils = {
+  constructParameterData,
+  getValueFromParameters,
   scenarioExistsInList,
   scenarioExistsInTree,
   getScenarioTree
