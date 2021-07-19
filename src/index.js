@@ -7,3 +7,4 @@ export { ScenarioUtils, DATASET_PARAM_VARTYPE } from './ScenarioUtils';
 export { WorkspaceFileUtils } from './WorkspaceFileUtils';
 export { TranslationUtils } from './TranslationUtils'
 export { ScenarioRunUtils, SCENARIO_RUN_STATE} from './ScenarioRunUtils'
+export { SignInUtils } from './SignInUtils';
