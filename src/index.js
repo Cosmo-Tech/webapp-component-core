@@ -3,7 +3,7 @@
 
 export { default as Auth } from './Auth';
 export { default as AuthDev } from './AuthDev';
-export { ScenarioUtils, DATASET_PARAM_VARTYPE } from './ScenarioUtils';
+export { ScenarioUtils, DATASET_PARAM_VARTYPE, SCENARIO_NAME_REGEX_VALIDATOR } from './ScenarioUtils';
 export { WorkspaceFileUtils } from './WorkspaceFileUtils';
 export { TranslationUtils } from './TranslationUtils'
 export { ScenarioRunUtils, SCENARIO_RUN_STATE} from './ScenarioRunUtils'
