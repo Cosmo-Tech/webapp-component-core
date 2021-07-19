@@ -22,7 +22,7 @@ const getScenarioTree = (scenarioList) => {
   scenarioList.sort();
   const scenarioTree = [];
   for (const parentScenario of scenarioList) {
-    if (parentScenario.parentId === undefined) {
+    if (!parentScenario.parentId) {
       scenarioTree.push(parentScenario);
     }
     parentScenario.children = [];
