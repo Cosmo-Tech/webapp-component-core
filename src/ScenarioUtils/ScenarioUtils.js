@@ -19,10 +19,13 @@ const scenarioExistsInTree = (scenarioName, scenarioTree) => {
 };
 
 const getScenarioTree = (scenarioList, compareFn) => {
-  scenarioList.sort(compareFn);
   const scenarioTree = [];
+  // Sort scenario list based on optional user-defined function
+  scenarioList.sort(compareFn);
+  // Set master & orphan scenarios as root scenarios, and add all their children
   for (const parentScenario of scenarioList) {
-    if (!parentScenario.parentId) {
+    if (!parentScenario.parentId || scenarioList.find(
+      grandParent => grandParent.id === parentScenario.parentId) === undefined) {
       scenarioTree.push(parentScenario);
     }
     parentScenario.children = [];
