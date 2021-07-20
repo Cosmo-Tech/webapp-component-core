@@ -18,8 +18,8 @@ const scenarioExistsInTree = (scenarioName, scenarioTree) => {
   return treeSearch(scenarioTree);
 };
 
-const getScenarioTree = (scenarioList) => {
-  scenarioList.sort();
+const getScenarioTree = (scenarioList, compareFn) => {
+  scenarioList.sort(compareFn);
   const scenarioTree = [];
   for (const parentScenario of scenarioList) {
     if (!parentScenario.parentId) {
