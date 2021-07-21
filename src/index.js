@@ -1,3 +1,5 @@
+// Copyright (c) Cosmo Tech.
+// Licensed under the MIT license.
 
 export { default as Auth } from './Auth';
 export { default as AuthDev } from './AuthDev';
@@ -13,4 +15,10 @@ export { ScenarioUtils,
     STORAGE_ROOT_DIR_PLACEHOLDER,
     UPLOAD_FILE_STATUS_KEY
 } from './utils';
+
+export { DatasetService,
+    ScenarioRunService,
+    WorkspaceService,
+    LOG_TYPES
+} from './services';
 
