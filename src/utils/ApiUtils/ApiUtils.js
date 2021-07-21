@@ -1,7 +1,7 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
 
-import Auth from "../Auth";
+import Auth from "../../Auth";
 
 const signIn = async (callback) => {
     if (Auth.isAsync()) {
