@@ -1,4 +1,4 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
 
-export { default as SignInUtils } from './SignInUtils';
+export { default as ApiUtils } from './ApiUtils';
