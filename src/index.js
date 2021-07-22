@@ -3,7 +3,8 @@
 
 export { default as Auth } from './Auth';
 export { default as AuthDev } from './AuthDev';
-export { ScenarioUtils,
+export {
+    ScenarioUtils,
     DATASET_PARAM_VARTYPE,
     SCENARIO_NAME_REGEX_VALIDATOR,
     WorkspaceFileUtils,
@@ -16,7 +17,8 @@ export { ScenarioUtils,
     UPLOAD_FILE_STATUS_KEY
 } from './utils';
 
-export { DatasetService,
+export {
+    DatasetService,
     ScenarioRunService,
     WorkspaceService,
     LOG_TYPES
