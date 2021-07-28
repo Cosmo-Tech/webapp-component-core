@@ -38,10 +38,22 @@ const getScenarioTree = (scenarioList, compareFn) => {
   return scenarioTree;
 };
 
+function countScenariosInTree (treeData) {
+  if (!treeData) {
+    return 0;
+  }
+  let count = treeData.length;
+  for (const node of treeData) {
+    count += countScenariosInTree(node.children);
+  }
+  return count;
+}
+
 const ScenarioUtils = {
   scenarioExistsInList,
   scenarioExistsInTree,
-  getScenarioTree
+  getScenarioTree,
+  countScenariosInTree
 };
 
 export default ScenarioUtils;
