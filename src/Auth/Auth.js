@@ -92,6 +92,14 @@ function isAsync () {
   return false;
 }
 
+function acquireTokens (callback) {
+  initProviderIfNull();
+  if (currentProvider === undefined) {
+    return undefined
+  }
+  return currentProvider.acquireTokens(callback);
+}
+
 function isUserSignedIn (callback) {
   initProviderIfNull();
   if (currentProvider === undefined) {
@@ -131,6 +139,7 @@ const Auth = {
   getUserName,
   getUserId,
   getUserPicUrl,
-  isAsync
+  isAsync,
+  acquireTokens
 };
 export default Auth;
