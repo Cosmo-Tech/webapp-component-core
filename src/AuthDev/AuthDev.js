@@ -36,6 +36,11 @@ function getUserName () {
   return undefined;
 }
 
+function acquireTokens () {
+  return undefined;
+}
+
+
 function getUserId () {
   if (authData) {
     return authData.userId;
@@ -55,6 +60,7 @@ const AuthDev = {
   getUserName,
   getUserId,
   getUserPicUrl,
-  isAsync
+  isAsync,
+  acquireTokens
 };
 export default AuthDev;
