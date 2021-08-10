@@ -95,7 +95,7 @@ function isAsync () {
 function acquireTokens (callback) {
   initProviderIfNull();
   if (currentProvider === undefined) {
-    return undefined
+    return undefined;
   }
   return currentProvider.acquireTokens(callback);
 }

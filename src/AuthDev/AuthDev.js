@@ -40,7 +40,6 @@ function acquireTokens () {
   return undefined;
 }
 
-
 function getUserId () {
   if (authData) {
     return authData.userId;
