@@ -7,8 +7,9 @@
   "module": "dist/index.esm.js",
   "scripts": {
     "build": "rollup -c",
-    "eslint": "eslint $INIT_CWD",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "eslint": "eslint",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "npx prettier -w"
   },
   "repository": {
     "type": "git",
