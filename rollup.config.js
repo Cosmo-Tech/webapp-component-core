@@ -12,23 +12,23 @@ export default {
   output: [
     {
       file: pkg.main,
-      format: 'cjs'
+      format: 'cjs',
     },
     {
       file: pkg.module,
-      format: 'esm'
-    }
+      format: 'esm',
+    },
   ],
   plugins: [
     external(),
     postcss(),
     babel({
       exclude: 'node_modules/**',
-      babelHelpers: 'bundled'
+      babelHelpers: 'bundled',
     }),
     resolve(),
     commonjs(),
     image(),
-    visualizer()
-  ]
+    visualizer(),
+  ],
 };

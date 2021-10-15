@@ -5,13 +5,13 @@
 // Notes : local storage works on Chromium but not on Firefox if "Delete
 // cookies and site data when Firefox is closed" is selected (for more
 // details, see https://bugzilla.mozilla.org/show_bug.cgi?id=1453699)
-function writeToStorage (key, value) {
+function writeToStorage(key, value) {
   localStorage.setItem(key, value);
 }
-function readFromStorage (key) {
+function readFromStorage(key) {
   return localStorage.getItem(key);
 }
-function clearFromStorage (key) {
+function clearFromStorage(key) {
   localStorage.removeItem(key);
 }
 
@@ -22,11 +22,12 @@ const providers = {};
 // List of callbacks to call on authentication data change
 const onAuthChangeCallbacks = [];
 
-function addProvider (newProvider) {
+function addProvider(newProvider) {
   // Check that provider name is defined
   if (newProvider.name === undefined) {
-    console.error('Trying to add a provider without name. Please make sure ' +
-      'that the provider name is defined and exported.');
+    console.error(
+      'Trying to add a provider without name. Please make sure ' + 'that the provider name is defined and exported.'
+    );
     return null;
   } else if (providers[newProvider.name] !== undefined) {
     // Do nothing if provider already exists
@@ -38,12 +39,16 @@ function addProvider (newProvider) {
   return providers[newProvider.name];
 }
 
-function setProvider (providerName) {
+function setProvider(providerName) {
   // Set new provider if it exists
   if (providers[providerName] === undefined) {
-    console.error('Provider "' + providerName + '" does not exist, you have ' +
-      'to register authentication providers with "addProvider" function ' +
-      'before using them');
+    console.error(
+      'Provider "' +
+        providerName +
+        '" does not exist, you have ' +
+        'to register authentication providers with "addProvider" function ' +
+        'before using them'
+    );
     currentProvider = undefined;
   } else {
     currentProvider = providers[providerName];
@@ -59,7 +64,7 @@ function setProvider (providerName) {
 // If no provider is currently selected but local storage has the information
 // of a provider used (in another tab or before a page refresh, for instance),
 // this provider will be selected
-function initProviderIfNull () {
+function initProviderIfNull() {
   if (currentProvider === undefined) {
     const newProviderName = readFromStorage('authProvider');
     if (newProviderName !== undefined && newProviderName !== null) {
@@ -68,22 +73,22 @@ function initProviderIfNull () {
   }
 }
 
-function signIn () {
+function signIn() {
   return currentProvider.signIn();
 }
 
-function signOut () {
+function signOut() {
   initProviderIfNull();
   // Clear last auth provider used from local storage
   clearFromStorage('authProvider');
   return currentProvider.signOut();
 }
 
-function onAuthStateChanged (newCallback) {
+function onAuthStateChanged(newCallback) {
   onAuthChangeCallbacks.push(newCallback);
 }
 
-function isAsync () {
+function isAsync() {
   initProviderIfNull();
   if (currentProvider && currentProvider.isAsync) {
     return currentProvider.isAsync();
@@ -92,7 +97,7 @@ function isAsync () {
   return false;
 }
 
-function acquireTokens (callback) {
+function acquireTokens(callback) {
   initProviderIfNull();
   if (currentProvider === undefined) {
     return undefined;
@@ -100,7 +105,7 @@ function acquireTokens (callback) {
   return currentProvider.acquireTokens(callback);
 }
 
-function isUserSignedIn (callback) {
+function isUserSignedIn(callback) {
   initProviderIfNull();
   if (currentProvider === undefined) {
     return false;
@@ -108,21 +113,21 @@ function isUserSignedIn (callback) {
   return currentProvider.isUserSignedIn(callback);
 }
 
-function getUserName () {
+function getUserName() {
   if (currentProvider === undefined) {
     return undefined;
   }
   return currentProvider.getUserName();
 }
 
-function getUserId () {
+function getUserId() {
   if (currentProvider === undefined) {
     return undefined;
   }
   return currentProvider.getUserId();
 }
 
-function getUserPicUrl () {
+function getUserPicUrl() {
   if (currentProvider === undefined) {
     return undefined;
   }
@@ -140,6 +145,6 @@ const Auth = {
   getUserId,
   getUserPicUrl,
   isAsync,
-  acquireTokens
+  acquireTokens,
 };
 export default Auth;

@@ -4,50 +4,50 @@
 const name = 'auth-dev';
 let authData = null;
 
-function setDefaultUser () {
+function setDefaultUser() {
   authData = {
     userId: 1,
-    userName: 'le dev'
+    userName: 'le dev',
   };
 }
 
-function signIn () {
+function signIn() {
   setDefaultUser();
   window.location.href = '/';
 }
 
-function signOut () {
+function signOut() {
   window.location.href = '/';
 }
 
-function isAsync () {
+function isAsync() {
   return false;
 }
 
-function isUserSignedIn () {
+function isUserSignedIn() {
   setDefaultUser();
   return true;
 }
 
-function getUserName () {
+function getUserName() {
   if (authData) {
     return authData.userName;
   }
   return undefined;
 }
 
-function acquireTokens () {
+function acquireTokens() {
   return undefined;
 }
 
-function getUserId () {
+function getUserId() {
   if (authData) {
     return authData.userId;
   }
   return undefined;
 }
 
-function getUserPicUrl () {
+function getUserPicUrl() {
   return undefined;
 }
 
@@ -60,6 +60,6 @@ const AuthDev = {
   getUserId,
   getUserPicUrl,
   isAsync,
-  acquireTokens
+  acquireTokens,
 };
 export default AuthDev;
