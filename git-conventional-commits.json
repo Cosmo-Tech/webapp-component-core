@@ -1,5 +1,5 @@
 {
-  "convention" : {
+  "convention": {
     "commitTypes": [
       "feat",
       "fix",
@@ -19,13 +19,8 @@
     "issueRegexPattern": "(^|\\s)#\\d+(\\s|$)"
   },
 
-  "changelog" : {
-    "commitTypes": [
-      "feat",
-      "fix",
-      "perf",
-      "merge"
-    ],
+  "changelog": {
+    "commitTypes": ["feat", "fix", "perf", "merge"],
     "commitIgnoreRegexPattern": "^WIP ",
     "headlines": {
       "feat": "Features",

@@ -3,7 +3,7 @@
 
 const scenarioExistsInList = (scenarioName, scenarioList) => {
   scenarioName = scenarioName.trim();
-  return scenarioList.find(scenario => scenario.name.trim() === scenarioName) !== undefined;
+  return scenarioList.find((scenario) => scenario.name.trim() === scenarioName) !== undefined;
 };
 
 const scenarioExistsInTree = (scenarioName, scenarioTree) => {
@@ -24,8 +24,10 @@ const getScenarioTree = (scenarioList, compareFn) => {
   scenarioList.sort(compareFn);
   // Set master & orphan scenarios as root scenarios, and add all their children
   for (const parentScenario of scenarioList) {
-    if (!parentScenario.parentId || scenarioList.find(
-      grandParent => grandParent.id === parentScenario.parentId) === undefined) {
+    if (
+      !parentScenario.parentId ||
+      scenarioList.find((grandParent) => grandParent.id === parentScenario.parentId) === undefined
+    ) {
       scenarioTree.push(parentScenario);
     }
     parentScenario.children = [];
@@ -38,7 +40,7 @@ const getScenarioTree = (scenarioList, compareFn) => {
   return scenarioTree;
 };
 
-function countScenariosInTree (treeData) {
+function countScenariosInTree(treeData) {
   if (!treeData) {
     return 0;
   }
@@ -53,7 +55,7 @@ const ScenarioUtils = {
   scenarioExistsInList,
   scenarioExistsInTree,
   getScenarioTree,
-  countScenariosInTree
+  countScenariosInTree,
 };
 
 export default ScenarioUtils;

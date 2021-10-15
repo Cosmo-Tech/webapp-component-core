@@ -7,7 +7,7 @@ const getDatasetNames = (datasets, scenarioDatasets) => {
   }
   const names = [];
   for (const datasetId of scenarioDatasets) {
-    const dataset = datasets.find(el => el.id === datasetId);
+    const dataset = datasets.find((el) => el.id === datasetId);
     if (dataset) {
       names.push(dataset.name);
     }
@@ -16,7 +16,7 @@ const getDatasetNames = (datasets, scenarioDatasets) => {
 };
 
 const DatasetUtils = {
-  getDatasetNames
+  getDatasetNames,
 };
 
 export default DatasetUtils;
