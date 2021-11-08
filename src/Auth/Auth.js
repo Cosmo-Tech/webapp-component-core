@@ -128,6 +128,13 @@ function getUserName() {
   return currentProvider.getUserName();
 }
 
+function getUserRoles() {
+  if (currentProvider === undefined) {
+    return undefined;
+  }
+  return currentProvider.getUserRoles();
+}
+
 function getUserId() {
   if (currentProvider === undefined) {
     return undefined;
@@ -151,6 +158,7 @@ const Auth = {
   isUserSignedIn,
   getUserName,
   getUserId,
+  getUserRoles,
   getUserPicUrl,
   isAsync,
   acquireTokens,
