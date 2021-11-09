@@ -105,12 +105,12 @@ function acquireTokens(callback) {
   return currentProvider.acquireTokens(callback);
 }
 
-function acquireTokensByRequest(tokenReq, callback) {
+function acquireTokensByRequest(tokenReq) {
   initProviderIfNull();
   if (currentProvider === undefined) {
     return undefined;
   }
-  return currentProvider.acquireTokensByRequest(tokenReq, callback);
+  return currentProvider.acquireTokensByRequest(tokenReq);
 }
 
 function isUserSignedIn(callback) {
