@@ -105,6 +105,14 @@ function acquireTokens(callback) {
   return currentProvider.acquireTokens(callback);
 }
 
+function acquireTokensByRequest(tokenReq) {
+  initProviderIfNull();
+  if (currentProvider === undefined) {
+    return undefined;
+  }
+  return currentProvider.acquireTokensByRequest(tokenReq);
+}
+
 function isUserSignedIn(callback) {
   initProviderIfNull();
   if (currentProvider === undefined) {
@@ -146,5 +154,6 @@ const Auth = {
   getUserPicUrl,
   isAsync,
   acquireTokens,
+  acquireTokensByRequest,
 };
 export default Auth;
