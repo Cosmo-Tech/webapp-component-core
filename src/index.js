@@ -7,3 +7,4 @@ export { default as AuthDev } from './AuthDev';
 export { default as DatasetUtils } from './DatasetUtils';
 export { DateUtils } from './DateUtils';
 export { default as ScenarioUtils } from './ScenarioUtils';
+export { ValidationUtils } from './ValidationUtils';
