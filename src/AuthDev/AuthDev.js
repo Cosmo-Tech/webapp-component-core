@@ -8,6 +8,7 @@ function setDefaultUser() {
   authData = {
     userId: 1,
     userName: 'le dev',
+    roles: ['Organization.User'],
   };
 }
 
@@ -51,6 +52,13 @@ function getUserId() {
   return undefined;
 }
 
+function getUserRoles() {
+  if (authData) {
+    return authData.roles;
+  }
+  return undefined;
+}
+
 function getUserPicUrl() {
   return undefined;
 }
@@ -61,6 +69,7 @@ const AuthDev = {
   signOut,
   isUserSignedIn,
   getUserName,
+  getUserRoles,
   getUserId,
   getUserPicUrl,
   isAsync,
