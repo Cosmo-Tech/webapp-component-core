@@ -8,7 +8,7 @@ function setDefaultUser() {
   authData = {
     userId: 1,
     userName: 'le dev',
-    roles: ['user.read'],
+    roles: ['Organization.User'],
   };
 }
 
