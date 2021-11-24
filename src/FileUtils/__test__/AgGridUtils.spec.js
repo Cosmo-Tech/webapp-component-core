@@ -80,3 +80,23 @@ describe('parse invalid CSV strings', () => {
     expect(res.rows).toStrictEqual(undefined);
   });
 });
+
+describe('export CSV string', () => {
+  const options = { dateFormat: 'yyyy-MM-dd' };
+  const headerCols = CUSTOMERS_COLS.map((col) => col.field);
+  const csvHeaderStr = headerCols.join();
+  const csvData = [headerCols].concat(CUSTOMERS_ROWS);
+  const csvWithHeaderStr = buildCSVStr(csvData);
+  const csvWithoutHeaderStr = buildCSVStr(CUSTOMERS_ROWS);
+
+  test.each`
+    writeHeader | rows              | cols              | expectedOutput
+    ${true}     | ${[]}             | ${CUSTOMERS_COLS} | ${csvHeaderStr}
+    ${false}    | ${[]}             | ${CUSTOMERS_COLS} | ${''}
+    ${false}    | ${CUSTOMERS_ROWS} | ${CUSTOMERS_COLS} | ${csvWithoutHeaderStr}
+    ${true}     | ${CUSTOMERS_ROWS} | ${CUSTOMERS_COLS} | ${csvWithHeaderStr}
+  `('with writeHeader="$writeHeader", rows="$rows" and cols="$cols"', ({ writeHeader, rows, cols, expectedOutput }) => {
+    const res = AgGridUtils.toCSV(writeHeader, rows, cols, options);
+    expect(res).toStrictEqual(expectedOutput);
+  });
+});
