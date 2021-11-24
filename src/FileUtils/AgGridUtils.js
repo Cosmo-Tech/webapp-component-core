@@ -51,7 +51,8 @@ const _validateFormat = (rows, hasHeader, cols, options) => {
       if (colIndex < knownColsCount) {
         const colType = colsData[colIndex].type;
         if (colType) {
-          const colOptions = { ...options, enumValues: colsData[colIndex]?.cellEditorParams?.enumValues };
+          const enumValues = colsData[colIndex]?.enumValues || colsData[colIndex]?.cellEditorParams?.enumValues;
+          const colOptions = { ...options, enumValues: enumValues };
           if (!ValidationUtils.isValid(rowCell, colType, colOptions)) {
             errors.push(_forgeTypeError(rowCell, rowIndex, colType, colOptions));
           }
