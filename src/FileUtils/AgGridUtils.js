@@ -4,6 +4,9 @@
 import CSV from './CSVUtils';
 import { ValidationUtils } from '../ValidationUtils';
 
+const RowSeparator = '\n';
+const ColumnSeparator = ',';
+
 const _forgeColumnsCountError = (row, rowIndex, expectedCols) => {
   const colsCount = row.length;
   const expectedColsCount = expectedCols.length;
@@ -105,8 +108,56 @@ const fromCSV = (dataStr, hasHeader = true, cols, options) => {
   return { cols: cols, rows: rows };
 };
 
+const toCSV = (writeHeader = true, rows, cols) => {
+  let str = '';
+  const firstCol = { val: true };
+  const firstRow = { val: true };
+
+  const handleSeparator = (trigger, separator) => {
+    if (!trigger.val) {
+      str = str.concat(separator);
+    } else {
+      trigger.val = false;
+    }
+  };
+
+  if (cols == null || cols.length === 0) {
+    return { error: [`Cols must be defined`] };
+  }
+
+  if (writeHeader) {
+    for (const col of cols) {
+      handleSeparator(firstCol, ColumnSeparator);
+      str = str.concat(col.field);
+    }
+  }
+
+  if (rows == null || rows.length === 0) {
+    return str;
+  } else {
+    if (writeHeader) {
+      str = str.concat(RowSeparator);
+    }
+  }
+
+  for (const row of rows) {
+    handleSeparator(firstRow, RowSeparator);
+    firstCol.val = true;
+    for (const col in cols) {
+      handleSeparator(firstCol, ColumnSeparator);
+      if (row[col] === undefined) {
+        return { error: [`Cols $col doesn't exist in row $row`] };
+      }
+      str = str.concat(row[col]);
+    }
+  }
+
+  return str;
+};
+
 const AgGridUtils = {
   fromCSV,
+  toCSV,
 };
 
 export default AgGridUtils;
