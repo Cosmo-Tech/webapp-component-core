@@ -3,6 +3,28 @@
 
 import CSV from './CSVUtils';
 import { ValidationUtils } from '../ValidationUtils';
+import { TableErrorData } from '../models';
+
+const _buildColumnsCountError = (missingColsCount, rowIndex, expectedColsCount, colsCount, expectedColsName, row) => {
+  const errorSummary = `Missing column${missingColsCount > 1 ? 's' : ''}`;
+  const errorLoc = `Line ${rowIndex}`;
+  const errorContext =
+    `${errorSummary} (${errorLoc}) : ${expectedColsCount} columns expected, ` +
+    `but only ${colsCount} column${colsCount > 1 ? 's' : ''} found\n` +
+    `Expected data format : "${expectedColsName}"\n` +
+    `Incorrect Row : "${row}"`;
+  return new TableErrorData(errorSummary, errorLoc, errorContext);
+};
+
+const _buildTypeError = (type, rowIndex, colIndex, colsData, value, expected) => {
+  const errorSummary = `Incorrect ${type} value`;
+  const errorLoc = `Line ${rowIndex} , Column ${colIndex} ("${colsData[colIndex].field}")`;
+  const errorContext = `${errorSummary} (${errorLoc})\n` + `Incorrect value : "${value}" for type ${type}`;
+  if (!expected || expected.length === 0) {
+    return new TableErrorData(errorSummary, errorLoc, errorContext);
+  }
+  return new TableErrorData(errorSummary, errorLoc, errorContext + '\n' + expected);
+};
 
 const DEFAULT_CSV_EXPORT_OPTIONS = {
   colSep: ',',
@@ -14,21 +36,19 @@ const DEFAULT_CSV_EXPORT_OPTIONS = {
 const _forgeColumnsCountError = (row, rowIndex, expectedCols) => {
   const colsCount = row.length;
   const expectedColsCount = expectedCols.length;
+  const expectedColsName = expectedCols.map((col) => col.field).join();
   const missingColsCount = expectedColsCount - colsCount;
-  return (
-    `Missing column${missingColsCount > 1 ? 's' : ''} on line ${rowIndex}: ${expectedColsCount} columns expected, ` +
-    `but only ${colsCount} column${colsCount > 1 ? 's' : ''} found`
-  );
+  return _buildColumnsCountError(missingColsCount, rowIndex, expectedColsCount, colsCount, expectedColsName, row);
 };
 
-const _forgeTypeError = (value, rowIndex, type, options) => {
+const _forgeTypeError = (value, rowIndex, type, options, colsData, colIndex) => {
   let expected = '';
   if (type === 'enum') {
-    expected = ` (expected values are [${options.enumValues.join()}])`;
+    expected = `Expected values: [${options.enumValues.join()}]`;
   } else if (type === 'date') {
-    expected = ` (expected format is ${options.dateFormat})`;
+    expected = `Expected format: ${options.dateFormat}`;
   }
-  return `Incorrect ${type} value on line ${rowIndex}: "${value}"${expected}`;
+  return _buildTypeError(type, rowIndex, colIndex, colsData, value, expected);
 };
 
 const _getColTypeFromTypeArray = (typeArray) => {
@@ -61,7 +81,7 @@ const _validateFormat = (rows, hasHeader, cols, options) => {
           const enumValues = colsData[colIndex]?.enumValues || colsData[colIndex]?.cellEditorParams?.enumValues;
           const colOptions = { ...options, enumValues: enumValues };
           if (!ValidationUtils.isValid(rowCell, colType, colOptions)) {
-            errors.push(_forgeTypeError(rowCell, rowIndex, colType, colOptions));
+            errors.push(_forgeTypeError(rowCell, rowIndex, colType, colOptions, colsData, colIndex));
           }
         }
       }
@@ -88,7 +108,7 @@ const _buildRows = (rows, hasHeader, cols) => {
 
 const fromCSV = (dataStr, hasHeader = true, cols, options) => {
   if (!hasHeader && !cols) {
-    return { error: ['cols must be defined if hasHeader=false'] };
+    return { error: [new TableErrorData('cols must be defined if hasHeader=false', null, null)] };
   }
   if (!dataStr || dataStr.length === 0) {
     return { cols: [], rows: [] };

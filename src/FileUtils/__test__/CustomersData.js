@@ -1,6 +1,8 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
 
+import { TableErrorData } from '../../models';
+
 export const CUSTOMERS_COLS = [
   { field: 'name', type: [] },
   { field: 'age', type: ['int'], minValue: 0, maxValue: 120 },
@@ -54,33 +56,148 @@ export const INVALID_CUSTOMERS_ROWS = [
 ];
 
 export const EXPECTED_ERRORS_WITH_HEADER = [
-  'Missing columns on line 1: 6 columns expected, but only 1 column found',
-  'Incorrect int value on line 2: "bad_int"',
-  'Incorrect bool value on line 3: "bad_bool"',
-  'Incorrect enum value on line 4: "bad_enum" (expected values are [AppleJuice,Beer,OrangeJuice,Wine])',
-  'Incorrect date value on line 5: "bad_date" (expected format is dd/MM/yyyy)',
-  'Incorrect number value on line 6: "bad_number"',
-  'Incorrect int value on line 7: "bad_int"',
-  'Incorrect bool value on line 7: "bad_bool"',
-  'Incorrect enum value on line 7: "bad_enum" (expected values are [AppleJuice,Beer,OrangeJuice,Wine])',
-  'Incorrect date value on line 7: "bad_date" (expected format is dd/MM/yyyy)',
-  'Incorrect number value on line 7: "bad_number"',
+  new TableErrorData(
+    'Missing columns',
+    'Line 1',
+    'Missing columns (Line 1) : 6 columns expected, but only 1 column found\n' +
+      'Expected data format : "name,age,canDrinkAlcohol,favoriteDrink,birthday,height"\n' +
+      'Incorrect Row : "MissingColumns"'
+  ),
+  new TableErrorData(
+    'Incorrect int value',
+    'Line 2 , Column 1 ("age")',
+    'Incorrect int value (Line 2 , Column 1 ("age"))\nIncorrect value : "bad_int" for type int'
+  ),
+  new TableErrorData(
+    'Incorrect bool value',
+    'Line 3 , Column 2 ("canDrinkAlcohol")',
+    'Incorrect bool value (Line 3 , Column 2 ("canDrinkAlcohol"))\nIncorrect value : "bad_bool" for type bool'
+  ),
+  new TableErrorData(
+    'Incorrect enum value',
+    'Line 4 , Column 3 ("favoriteDrink")',
+    'Incorrect enum value (Line 4 , Column 3 ("favoriteDrink"))\n' +
+      'Incorrect value : "bad_enum" for type enum\n' +
+      'Expected values: [AppleJuice,Beer,OrangeJuice,Wine]'
+  ),
+  new TableErrorData(
+    'Incorrect date value',
+    'Line 5 , Column 4 ("birthday")',
+    'Incorrect date value (Line 5 , Column 4 ("birthday"))\n' +
+      'Incorrect value : "bad_date" for type date\n' +
+      'Expected format: dd/MM/yyyy'
+  ),
+  new TableErrorData(
+    'Incorrect number value',
+    'Line 6 , Column 5 ("height")',
+    'Incorrect number value (Line 6 , Column 5 ("height"))\nIncorrect value : "bad_number" for type number'
+  ),
+  new TableErrorData(
+    'Incorrect int value',
+    'Line 7 , Column 1 ("age")',
+    'Incorrect int value (Line 7 , Column 1 ("age"))\nIncorrect value : "bad_int" for type int'
+  ),
+  new TableErrorData(
+    'Incorrect bool value',
+    'Line 7 , Column 2 ("canDrinkAlcohol")',
+    'Incorrect bool value (Line 7 , Column 2 ("canDrinkAlcohol"))\nIncorrect value : "bad_bool" for type bool'
+  ),
+  new TableErrorData(
+    'Incorrect enum value',
+    'Line 7 , Column 3 ("favoriteDrink")',
+    'Incorrect enum value (Line 7 , Column 3 ("favoriteDrink"))\n' +
+      'Incorrect value : "bad_enum" for type enum\n' +
+      'Expected values: [AppleJuice,Beer,OrangeJuice,Wine]'
+  ),
+  new TableErrorData(
+    'Incorrect date value',
+    'Line 7 , Column 4 ("birthday")',
+    'Incorrect date value (Line 7 , Column 4 ("birthday"))\n' +
+      'Incorrect value : "bad_date" for type date\n' +
+      'Expected format: dd/MM/yyyy'
+  ),
+  new TableErrorData(
+    'Incorrect number value',
+    'Line 7 , Column 5 ("height")',
+    'Incorrect number value (Line 7 , Column 5 ("height"))\nIncorrect value : "bad_number" for type number'
+  ),
 ];
 
-export const EXPECTED_ERRORS_WITHOUT_COLS = ['Missing columns on line 1: 6 columns expected, but only 1 column found'];
+export const EXPECTED_ERRORS_WITHOUT_COLS = [
+  new TableErrorData(
+    'Missing columns',
+    'Line 1',
+    'Missing columns (Line 1) : 6 columns expected, but only 1 column found\nExpected data format ' +
+      ': "name,age,canDrinkAlcohol,favoriteDrink,birthday,height"\nIncorrect Row : "MissingColumns"'
+  ),
+];
 
 export const EXPECTED_ERRORS_WITHOUT_HEADER = [
-  'Missing columns on line 0: 6 columns expected, but only 1 column found',
-  'Incorrect int value on line 1: "bad_int"',
-  'Incorrect bool value on line 2: "bad_bool"',
-  'Incorrect enum value on line 3: "bad_enum" (expected values are [AppleJuice,Beer,OrangeJuice,Wine])',
-  'Incorrect date value on line 4: "bad_date" (expected format is dd/MM/yyyy)',
-  'Incorrect number value on line 5: "bad_number"',
-  'Incorrect int value on line 6: "bad_int"',
-  'Incorrect bool value on line 6: "bad_bool"',
-  'Incorrect enum value on line 6: "bad_enum" (expected values are [AppleJuice,Beer,OrangeJuice,Wine])',
-  'Incorrect date value on line 6: "bad_date" (expected format is dd/MM/yyyy)',
-  'Incorrect number value on line 6: "bad_number"',
+  new TableErrorData(
+    'Missing columns',
+    'Line 0',
+    'Missing columns (Line 0) : 6 columns expected, but only 1 column found\n' +
+      'Expected data format : "name,age,canDrinkAlcohol,favoriteDrink,birthday,height"\n' +
+      'Incorrect Row : "MissingColumns"'
+  ),
+  new TableErrorData(
+    'Incorrect int value',
+    'Line 1 , Column 1 ("age")',
+    'Incorrect int value (Line 1 , Column 1 ("age"))\nIncorrect value : "bad_int" for type int'
+  ),
+  new TableErrorData(
+    'Incorrect bool value',
+    'Line 2 , Column 2 ("canDrinkAlcohol")',
+    'Incorrect bool value (Line 2 , Column 2 ("canDrinkAlcohol"))\nIncorrect value : "bad_bool" for type bool'
+  ),
+  new TableErrorData(
+    'Incorrect enum value',
+    'Line 3 , Column 3 ("favoriteDrink")',
+    'Incorrect enum value (Line 3 , Column 3 ("favoriteDrink"))\n' +
+      'Incorrect value : "bad_enum" for type enum\n' +
+      'Expected values: [AppleJuice,Beer,OrangeJuice,Wine]'
+  ),
+  new TableErrorData(
+    'Incorrect date value',
+    'Line 4 , Column 4 ("birthday")',
+    'Incorrect date value (Line 4 , Column 4 ("birthday"))\n' +
+      'Incorrect value : "bad_date" for type date\n' +
+      'Expected format: dd/MM/yyyy'
+  ),
+  new TableErrorData(
+    'Incorrect number value',
+    'Line 5 , Column 5 ("height")',
+    'Incorrect number value (Line 5 , Column 5 ("height"))\nIncorrect value : "bad_number" for type number'
+  ),
+  new TableErrorData(
+    'Incorrect int value',
+    'Line 6 , Column 1 ("age")',
+    'Incorrect int value (Line 6 , Column 1 ("age"))\nIncorrect value : "bad_int" for type int'
+  ),
+  new TableErrorData(
+    'Incorrect bool value',
+    'Line 6 , Column 2 ("canDrinkAlcohol")',
+    'Incorrect bool value (Line 6 , Column 2 ("canDrinkAlcohol"))\nIncorrect value : "bad_bool" for type bool'
+  ),
+  new TableErrorData(
+    'Incorrect enum value',
+    'Line 6 , Column 3 ("favoriteDrink")',
+    'Incorrect enum value (Line 6 , Column 3 ("favoriteDrink"))\n' +
+      'Incorrect value : "bad_enum" for type enum\n' +
+      'Expected values: [AppleJuice,Beer,OrangeJuice,Wine]'
+  ),
+  new TableErrorData(
+    'Incorrect date value',
+    'Line 6 , Column 4 ("birthday")',
+    'Incorrect date value (Line 6 , Column 4 ("birthday"))\n' +
+      'Incorrect value : "bad_date" for type date\n' +
+      'Expected format: dd/MM/yyyy'
+  ),
+  new TableErrorData(
+    'Incorrect number value',
+    'Line 6 , Column 5 ("height")',
+    'Incorrect number value (Line 6 , Column 5 ("height"))\nIncorrect value : "bad_number" for type number'
+  ),
 ];
 
 export const EXPECTED_CUSTOM_CSV_OUTPUT =

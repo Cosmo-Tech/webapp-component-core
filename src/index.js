@@ -8,3 +8,4 @@ export { default as DatasetUtils } from './DatasetUtils';
 export { DateUtils } from './DateUtils';
 export { default as ScenarioUtils } from './ScenarioUtils';
 export { ValidationUtils } from './ValidationUtils';
+export { TableErrorData } from './models';
