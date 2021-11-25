@@ -4,11 +4,12 @@
 import {
   CUSTOMERS_COLS,
   CUSTOMERS_ROWS,
-  EXPECTED_ROWS,
+  AGGRID_FORMATTED_ROWS,
   INVALID_CUSTOMERS_ROWS,
   EXPECTED_ERRORS_WITHOUT_COLS,
   EXPECTED_ERRORS_WITH_HEADER,
   EXPECTED_ERRORS_WITHOUT_HEADER,
+  EXPECTED_CUSTOM_CSV_OUTPUT,
 } from './CustomersData';
 import { AgGridUtils } from '..';
 
@@ -40,12 +41,12 @@ describe('parse valid CSV strings', () => {
   });
 
   test.each`
-    dataStr                | hasHeader | cols              | expectedRows     | expectedCols
-    ${headerOnlyStr}       | ${true}   | ${undefined}      | ${[]}            | ${generatedCols}
-    ${headerOnlyStr}       | ${true}   | ${CUSTOMERS_COLS} | ${[]}            | ${CUSTOMERS_COLS}
-    ${csvWithHeaderStr}    | ${true}   | ${undefined}      | ${EXPECTED_ROWS} | ${generatedCols}
-    ${csvWithHeaderStr}    | ${true}   | ${CUSTOMERS_COLS} | ${EXPECTED_ROWS} | ${CUSTOMERS_COLS}
-    ${csvWithoutHeaderStr} | ${false}  | ${CUSTOMERS_COLS} | ${EXPECTED_ROWS} | ${CUSTOMERS_COLS}
+    dataStr                | hasHeader | cols              | expectedRows             | expectedCols
+    ${headerOnlyStr}       | ${true}   | ${undefined}      | ${[]}                    | ${generatedCols}
+    ${headerOnlyStr}       | ${true}   | ${CUSTOMERS_COLS} | ${[]}                    | ${CUSTOMERS_COLS}
+    ${csvWithHeaderStr}    | ${true}   | ${undefined}      | ${AGGRID_FORMATTED_ROWS} | ${generatedCols}
+    ${csvWithHeaderStr}    | ${true}   | ${CUSTOMERS_COLS} | ${AGGRID_FORMATTED_ROWS} | ${CUSTOMERS_COLS}
+    ${csvWithoutHeaderStr} | ${false}  | ${CUSTOMERS_COLS} | ${AGGRID_FORMATTED_ROWS} | ${CUSTOMERS_COLS}
   `('with hasHeader="$hasHeader" and cols="$cols"', ({ dataStr, hasHeader, cols, expectedRows, expectedCols }) => {
     const res = AgGridUtils.fromCSV(dataStr, hasHeader, cols, options);
     expect(res.error).toStrictEqual(undefined);
@@ -82,7 +83,15 @@ describe('parse invalid CSV strings', () => {
 });
 
 describe('export CSV string', () => {
-  const options = { dateFormat: 'yyyy-MM-dd' };
+  const defaultOptions = { desc: 'default options' };
+  const defaultOptionsNoHeader = { desc: 'default options without header', writeHeader: false };
+  const customOptions = {
+    desc: 'custom options',
+    colSep: ';',
+    dateFormat: 'dd/MM/yyyy',
+    rowSep: '\n\n',
+  };
+
   const headerCols = CUSTOMERS_COLS.map((col) => col.field);
   const csvHeaderStr = headerCols.join();
   const csvData = [headerCols].concat(CUSTOMERS_ROWS);
@@ -90,13 +99,14 @@ describe('export CSV string', () => {
   const csvWithoutHeaderStr = buildCSVStr(CUSTOMERS_ROWS);
 
   test.each`
-    writeHeader | rows              | cols              | expectedOutput
-    ${true}     | ${[]}             | ${CUSTOMERS_COLS} | ${csvHeaderStr}
-    ${false}    | ${[]}             | ${CUSTOMERS_COLS} | ${''}
-    ${false}    | ${CUSTOMERS_ROWS} | ${CUSTOMERS_COLS} | ${csvWithoutHeaderStr}
-    ${true}     | ${CUSTOMERS_ROWS} | ${CUSTOMERS_COLS} | ${csvWithHeaderStr}
-  `('with writeHeader="$writeHeader", rows="$rows" and cols="$cols"', ({ writeHeader, rows, cols, expectedOutput }) => {
-    const res = AgGridUtils.toCSV(writeHeader, rows, cols, options);
+    options                   | rows                     | cols              | expectedOutput
+    ${defaultOptions}         | ${[]}                    | ${CUSTOMERS_COLS} | ${csvHeaderStr}
+    ${defaultOptions}         | ${AGGRID_FORMATTED_ROWS} | ${CUSTOMERS_COLS} | ${csvWithHeaderStr}
+    ${defaultOptionsNoHeader} | ${[]}                    | ${CUSTOMERS_COLS} | ${''}
+    ${defaultOptionsNoHeader} | ${AGGRID_FORMATTED_ROWS} | ${CUSTOMERS_COLS} | ${csvWithoutHeaderStr}
+    ${customOptions}          | ${AGGRID_FORMATTED_ROWS} | ${CUSTOMERS_COLS} | ${EXPECTED_CUSTOM_CSV_OUTPUT}
+  `('Test $#: with $options.desc, rows="$rows" and cols="$cols"', ({ options, rows, cols, expectedOutput }) => {
+    const res = AgGridUtils.toCSV(rows, cols, options);
     expect(res).toStrictEqual(expectedOutput);
   });
 });
