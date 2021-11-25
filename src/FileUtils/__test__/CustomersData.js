@@ -14,14 +14,23 @@ export const CUSTOMERS_COLS = [
   { field: 'height', type: ['number'], minValue: 0, maxValue: 2.5 },
 ];
 
-export const CUSTOMERS_ROWS = [
+export const SIMPLE_CUSTOMERS_ROWS = [
   ['Bob', '10', 'false', 'AppleJuice', '01/04/2011', '1.40'],
   ['Lily', '8', 'false', 'AppleJuice', '09/05/2013', '1.41'],
   ['Maria', '34', 'true', 'Wine', '19/03/1987', '1.90'],
   ['Howard', '34', 'true', 'Beer', '12/05/1987', '1.83'],
 ];
 
-export const EXPECTED_ROWS = [
+export const COMPLEX_CUSTOMERS_ROWS = [
+  ['Bob', '10', 'false', 'AppleJuice', '01/04/2011', '1.40'],
+  ['Lily', '8', 'no', 'AppleJuice', '09/05/2013', '1.41'],
+  ['Lily', '8', '0', 'AppleJuice', '09/05/2013', '1.41'],
+  ['Maria', '34', 'true', 'Wine', '19/03/1987', '1.90'],
+  ['Howard', '34', 'yes', 'Beer', '12/05/1987', '1.83'],
+  ['Howard', '34', '1', 'Beer', '12/05/1987', '1.83'],
+];
+
+export const SIMPLE_AGGRID_FORMATTED_ROWS = [
   {
     name: 'Bob',
     age: '10',
@@ -42,15 +51,68 @@ export const EXPECTED_ROWS = [
   { name: 'Howard', age: '34', canDrinkAlcohol: 'true', favoriteDrink: 'Beer', birthday: '12/05/1987', height: '1.83' },
 ];
 
+export const COMPLEX_AGGRID_FORMATTED_ROWS = [
+  {
+    name: 'Bob',
+    age: '10',
+    canDrinkAlcohol: 'false',
+    favoriteDrink: 'AppleJuice',
+    birthday: '01/04/2011',
+    height: '1.40',
+  },
+  {
+    name: 'Lily',
+    age: '8',
+    canDrinkAlcohol: 'false',
+    favoriteDrink: 'AppleJuice',
+    birthday: '09/05/2013',
+    height: '1.41',
+  },
+  {
+    name: 'Lily',
+    age: '8',
+    canDrinkAlcohol: 'false',
+    favoriteDrink: 'AppleJuice',
+    birthday: '09/05/2013',
+    height: '1.41',
+  },
+  { name: 'Maria', age: '34', canDrinkAlcohol: 'true', favoriteDrink: 'Wine', birthday: '19/03/1987', height: '1.90' },
+  { name: 'Howard', age: '34', canDrinkAlcohol: 'true', favoriteDrink: 'Beer', birthday: '12/05/1987', height: '1.83' },
+  { name: 'Howard', age: '34', canDrinkAlcohol: 'true', favoriteDrink: 'Beer', birthday: '12/05/1987', height: '1.83' },
+];
+
+export const UNCHANGED_AGGRID_FORMATTED_ROWS2 = [
+  {
+    name: 'Bob',
+    age: '10',
+    canDrinkAlcohol: 'false',
+    favoriteDrink: 'AppleJuice',
+    birthday: '01/04/2011',
+    height: '1.40',
+  },
+  {
+    name: 'Lily',
+    age: '8',
+    canDrinkAlcohol: 'no',
+    favoriteDrink: 'AppleJuice',
+    birthday: '09/05/2013',
+    height: '1.41',
+  },
+  { name: 'Lily', age: '8', canDrinkAlcohol: '0', favoriteDrink: 'AppleJuice', birthday: '09/05/2013', height: '1.41' },
+  { name: 'Maria', age: '34', canDrinkAlcohol: 'true', favoriteDrink: 'Wine', birthday: '19/03/1987', height: '1.90' },
+  { name: 'Howard', age: '34', canDrinkAlcohol: 'yes', favoriteDrink: 'Beer', birthday: '12/05/1987', height: '1.83' },
+  { name: 'Howard', age: '34', canDrinkAlcohol: '1', favoriteDrink: 'Beer', birthday: '12/05/1987', height: '1.83' },
+];
+
 export const INVALID_CUSTOMERS_ROWS = [
   ['MissingColumns'],
-  ['Bob', 'bad_int', 'false', 'AppleJuice', '01/01/2000', '1.70'],
+  ['Bob', 'bad_int', 'faLSE', 'AppleJuice', '01/01/2000', '1.70'],
   ['Bob', '15', 'bad_bool', 'AppleJuice', '01/01/2000', '1.70'],
-  ['Bob', '15', 'false', 'bad_enum', '01/01/2000', '1.70'],
-  ['Bob', '15', 'false', 'AppleJuice', 'bad_date', '1.70'],
-  ['Bob', '15', 'false', 'AppleJuice', '01/01/2000', 'bad_number'],
+  ['Bob', '15', 'TRue', 'bad_enum', '01/01/2000', '1.70'],
+  ['Bob', '15', '1', 'AppleJuice', 'bad_date', '1.70'],
+  ['Bob', '15', '0', 'AppleJuice', '01/01/2000', 'bad_number'],
   ['Bob', 'bad_int', 'bad_bool', 'bad_enum', 'bad_date', 'bad_number'],
-  ['Bob', '15', 'false', 'AppleJuice', '01/01/2000', '1.70'],
+  ['Bob', '15', 'yes', 'AppleJuice', '01/01/2000', '1.70'],
 ];
 
 export const EXPECTED_ERRORS_WITH_HEADER = [
@@ -82,3 +144,10 @@ export const EXPECTED_ERRORS_WITHOUT_HEADER = [
   'Incorrect date value on line 6: "bad_date" (expected format is dd/MM/yyyy)',
   'Incorrect number value on line 6: "bad_number"',
 ];
+
+export const EXPECTED_CUSTOM_CSV_OUTPUT =
+  'name,age,canDrinkAlcohol,favoriteDrink,birthday,height\n\n' +
+  'Bob;10;false;AppleJuice;01/04/2011;1.40\n\n' +
+  'Lily;8;false;AppleJuice;09/05/2013;1.41\n\n' +
+  'Maria;34;true;Wine;19/03/1987;1.90\n\n' +
+  'Howard;34;true;Beer;12/05/1987;1.83';

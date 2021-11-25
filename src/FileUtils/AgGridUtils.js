@@ -4,8 +4,12 @@
 import CSV from './CSVUtils';
 import { ValidationUtils } from '../ValidationUtils';
 
-const RowSeparator = '\n';
-const ColumnSeparator = ',';
+const DEFAULT_CSV_EXPORT_OPTIONS = {
+  colSep: ',',
+  dateFormat: 'yyyy-MM-dd',
+  rowSep: '\n',
+  writeHeader: true,
+};
 
 const _forgeColumnsCountError = (row, rowIndex, expectedCols) => {
   const colsCount = row.length;
@@ -67,6 +71,23 @@ const _validateFormat = (rows, hasHeader, cols, options) => {
   return errors;
 };
 
+const _reformatBoolValue = (csvCellValue) => {
+  csvCellValue = csvCellValue.toLowerCase();
+  if (['0', 'false', 'no'].includes(csvCellValue)) {
+    return 'false';
+  } else if (['1', 'true', 'yes'].includes(csvCellValue)) {
+    return 'true';
+  }
+  return null;
+};
+
+const _reformatValue = (csvCellValue, colTypes) => {
+  if (colTypes && colTypes.includes('bool')) {
+    return _reformatBoolValue(csvCellValue);
+  }
+  return csvCellValue;
+};
+
 const _buildCols = (header) => header.map((col) => ({ field: col }));
 
 const _buildRows = (rows, hasHeader, cols) => {
@@ -75,7 +96,8 @@ const _buildRows = (rows, hasHeader, cols) => {
   for (let rowIndex = startIndex; rowIndex < rows.length; rowIndex++) {
     const row = {};
     for (let colIndex = 0; colIndex < cols.length; colIndex++) {
-      row[cols[colIndex].field] = rows[rowIndex][colIndex];
+      const csvCellValue = rows[rowIndex][colIndex];
+      row[cols[colIndex].field] = _reformatValue(csvCellValue, cols[colIndex].type);
     }
     formattedData.push(row);
   }
@@ -108,51 +130,40 @@ const fromCSV = (dataStr, hasHeader = true, cols, options) => {
   return { cols: cols, rows: rows };
 };
 
-const toCSV = (writeHeader = true, rows, cols) => {
-  let str = '';
-  const firstCol = { val: true };
-  const firstRow = { val: true };
+const _generateHeader = (cols, separator = ',') => {
+  return cols.map((col) => col.field).join(separator);
+};
 
-  const handleSeparator = (trigger, separator) => {
-    if (!trigger.val) {
-      str = str.concat(separator);
-    } else {
-      trigger.val = false;
-    }
-  };
+const _generateRow = (row, cols, separator = ',') => {
+  return cols.map((col) => row[col.field]).join(separator);
+};
 
+const _generateRows = (rows, cols, colSep = ',', rowSep = '\n') => {
+  return rows.map((row) => _generateRow(row, cols, colSep)).join(rowSep);
+};
+
+const toCSV = (rows, cols, options) => {
   if (cols == null || cols.length === 0) {
     return { error: [`Cols must be defined`] };
   }
-
-  if (writeHeader) {
-    for (const col of cols) {
-      handleSeparator(firstCol, ColumnSeparator);
-      str = str.concat(col.field);
-    }
+  if (!rows) {
+    rows = [];
   }
 
-  if (rows == null || rows.length === 0) {
-    return str;
-  } else {
-    if (writeHeader) {
-      str = str.concat(RowSeparator);
+  options = {
+    ...DEFAULT_CSV_EXPORT_OPTIONS,
+    ...options,
+  };
+
+  const rowsStr = _generateRows(rows, cols, options.colSep, options.rowSep);
+  let header = '';
+  if (options.writeHeader) {
+    header = _generateHeader(cols);
+    if (rowsStr.length > 0) {
+      header = header.concat(options.rowSep);
     }
   }
-
-  for (const row of rows) {
-    handleSeparator(firstRow, RowSeparator);
-    firstCol.val = true;
-    for (const col in cols) {
-      handleSeparator(firstCol, ColumnSeparator);
-      if (row[col] === undefined) {
-        return { error: [`Cols $col doesn't exist in row $row`] };
-      }
-      str = str.concat(row[col]);
-    }
-  }
-
-  return str;
+  return header.concat(rowsStr);
 };
 
 const AgGridUtils = {
