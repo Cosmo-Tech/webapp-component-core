@@ -12,6 +12,7 @@ import {
   EXPECTED_CUSTOM_CSV_OUTPUT,
 } from './CustomersData';
 import { AgGridUtils } from '..';
+import { Error } from '../../models';
 
 const buildCSVStr = (csvData) => csvData.map((csvRow) => csvRow.join()).join('\n');
 
@@ -58,7 +59,7 @@ describe('parse valid CSV strings', () => {
 describe('parse with invalid parameters', () => {
   test('missing columns definition', () => {
     const res = AgGridUtils.fromCSV('', false, undefined);
-    expect(res.error).toStrictEqual(['cols must be defined if hasHeader=false']);
+    expect(res.error).toStrictEqual([new Error('cols must be defined if hasHeader=false', null, null)]);
   });
 });
 
