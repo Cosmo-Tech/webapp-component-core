@@ -21,7 +21,7 @@ export const CUSTOMERS_ROWS = [
   ['Howard', '34', 'true', 'Beer', '12/05/1987', '1.83'],
 ];
 
-export const EXPECTED_ROWS = [
+export const AGGRID_FORMATTED_ROWS = [
   {
     name: 'Bob',
     age: '10',
@@ -82,3 +82,10 @@ export const EXPECTED_ERRORS_WITHOUT_HEADER = [
   'Incorrect date value on line 6: "bad_date" (expected format is dd/MM/yyyy)',
   'Incorrect number value on line 6: "bad_number"',
 ];
+
+export const EXPECTED_CUSTOM_CSV_OUTPUT =
+  'name,age,canDrinkAlcohol,favoriteDrink,birthday,height\n\n' +
+  'Bob;10;false;AppleJuice;01/04/2011;1.40\n\n' +
+  'Lily;8;false;AppleJuice;09/05/2013;1.41\n\n' +
+  'Maria;34;true;Wine;19/03/1987;1.90\n\n' +
+  'Howard;34;true;Beer;12/05/1987;1.83';
