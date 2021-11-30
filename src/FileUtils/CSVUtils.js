@@ -4,7 +4,9 @@
 import * as CSV from 'csv-string';
 
 const read = (dataStr) => {
-  return CSV.parse(dataStr);
+  return CSV.parse(dataStr).map((row) => {
+    return row.map((cell) => cell.trim());
+  });
 };
 
 const write = (dataArray) => {
