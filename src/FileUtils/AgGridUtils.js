@@ -91,6 +91,23 @@ const _validateFormat = (rows, hasHeader, cols, options) => {
   return errors;
 };
 
+const _reformatBoolValue = (csvCellValue) => {
+  csvCellValue = csvCellValue.toLowerCase();
+  if (['0', 'false', 'no'].includes(csvCellValue)) {
+    return 'false';
+  } else if (['1', 'true', 'yes'].includes(csvCellValue)) {
+    return 'true';
+  }
+  return null;
+};
+
+const _reformatValue = (csvCellValue, colTypes) => {
+  if (colTypes && colTypes.includes('bool')) {
+    return _reformatBoolValue(csvCellValue);
+  }
+  return csvCellValue;
+};
+
 const _buildCols = (header) => header.map((col) => ({ field: col }));
 
 const _buildRows = (rows, hasHeader, cols) => {
@@ -99,7 +116,8 @@ const _buildRows = (rows, hasHeader, cols) => {
   for (let rowIndex = startIndex; rowIndex < rows.length; rowIndex++) {
     const row = {};
     for (let colIndex = 0; colIndex < cols.length; colIndex++) {
-      row[cols[colIndex].field] = rows[rowIndex][colIndex];
+      const csvCellValue = rows[rowIndex][colIndex];
+      row[cols[colIndex].field] = _reformatValue(csvCellValue, cols[colIndex].type);
     }
     formattedData.push(row);
   }
