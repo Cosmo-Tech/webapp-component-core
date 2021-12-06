@@ -2081,7 +2081,7 @@ date-fns@^2.25.0:
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.26.0.tgz#fa45305543c392c4f914e50775fd2a4461e60fbd"
   integrity sha512-VQI812dRi3cusdY/fhoBKvc6l2W8BPWU1FNVnFH9Nttjx4AFBRzfSVb/Eyc7jBT6e9sg1XtAGsYpBQ6c/jygbg==
 
-debug@4, debug@^4.0.1, debug@^4.1.0, debug@^4.1.1, debug@^4.3.2:
+debug@4, debug@^4.3.2:
   version "4.3.2"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.2.tgz#f0a49c18ac8779e31d4a0c6029dfb76873c7428b"
   integrity sha512-mOp8wKcvj7XxC78zLgw/ZA+6TSgkoE2C/ienthhRD298T7UNwAg9diBpLRxC0mOezLl4B0xV7M0cCO6P/O0Xhw==
@@ -2363,9 +2363,9 @@ eslint-plugin-import@^2.23.3:
     tsconfig-paths "^3.11.0"
 
 eslint-plugin-jest@^25.2.4:
-  version "25.2.4"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-25.2.4.tgz#bb9f6a0bd1fd524ffb0b8b7a159cd70a58a1a793"
-  integrity sha512-HRyinpgmEdkVr7pNPaYPHCoGqEzpgk79X8pg/xCeoAdurbyQjntJQ4pTzHl7BiVEBlam/F1Qsn+Dk0HtJO7Aaw==
+  version "25.3.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-25.3.0.tgz#6c04bbf13624a75684a05391a825b58e2e291950"
+  integrity sha512-79WQtuBsTN1S8Y9+7euBYwxIOia/k7ykkl9OCBHL3xuww5ecursHy/D8GCIlvzHVWv85gOkS5Kv6Sh7RxOgK1Q==
   dependencies:
     "@typescript-eslint/experimental-utils" "^5.0.0"
 
