@@ -37,13 +37,16 @@
     "@rollup/plugin-image": "^2.0.5",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "eslint": "^7.27.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.23.3",
     "eslint-plugin-jest": "^25.2.4",
     "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-promise": "^5.1.0",
     "jest": "^27.3.1",
     "postcss": "^8.1.0",
+    "prettier": "^2.5.1",
     "rollup": "^2.49.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.0",
@@ -53,10 +56,7 @@
   "dependencies": {
     "csv-string": "^4.0.1",
     "date-fns": "^2.25.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
     "js-file-download": "^0.4.12",
-    "prettier": "^2.4.1",
     "validator": "^13.7.0"
   }
 }
