@@ -57,7 +57,7 @@
     "csv-string": "^4.0.1",
     "date-fns": "^2.25.0",
     "js-file-download": "^0.4.12",
-    "read-excel-file": "^5.2.25",
-    "validator": "^13.7.0"
+    "validator": "^13.7.0",
+    "xlsx": "^0.17.4"
   }
 }
