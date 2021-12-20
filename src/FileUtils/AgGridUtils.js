@@ -2,8 +2,9 @@
 // Licensed under the MIT license.
 
 import CSV from './CSVUtils';
+import XLSXUtils from './XLSXUtils';
 import { ValidationUtils } from '../ValidationUtils';
-import { Error } from '../models';
+import { Error as PanelError } from '../models';
 
 const _buildColumnsCountError = (missingColsCount, rowIndex, expectedColsCount, colsCount, expectedColsName, row) => {
   const errorSummary = `Missing column${missingColsCount > 1 ? 's' : ''}`;
@@ -13,7 +14,7 @@ const _buildColumnsCountError = (missingColsCount, rowIndex, expectedColsCount, 
     `but only ${colsCount} column${colsCount > 1 ? 's' : ''} found\n` +
     `Expected data format : "${expectedColsName}"\n` +
     `Incorrect Row : "${row}"`;
-  return new Error(errorSummary, errorLoc, errorContext);
+  return new PanelError(errorSummary, errorLoc, errorContext);
 };
 
 const _buildTypeError = (type, rowIndex, colIndex, colsData, value, expected) => {
@@ -21,9 +22,9 @@ const _buildTypeError = (type, rowIndex, colIndex, colsData, value, expected) =>
   const errorLoc = `Line ${rowIndex} , Column ${colIndex} ("${colsData[colIndex].field}")`;
   const errorContext = `${errorSummary} (${errorLoc})\n` + `Incorrect value : "${value}" for type ${type}`;
   if (!expected || expected.length === 0) {
-    return new Error(errorSummary, errorLoc, errorContext);
+    return new PanelError(errorSummary, errorLoc, errorContext);
   }
-  return new Error(errorSummary, errorLoc, errorContext + '\n' + expected);
+  return new PanelError(errorSummary, errorLoc, errorContext + '\n' + expected);
 };
 
 const DEFAULT_CSV_EXPORT_OPTIONS = {
@@ -126,7 +127,7 @@ const _buildRows = (rows, hasHeader, cols) => {
 
 const fromCSV = (dataStr, hasHeader = true, cols, options) => {
   if (!hasHeader && !cols) {
-    return { error: [new Error('cols must be defined if hasHeader=false', null, null)] };
+    return { error: [new PanelError('cols must be defined if hasHeader=false', null, null)] };
   }
   if (!dataStr || dataStr.length === 0) {
     return { cols: [], rows: [] };
@@ -186,8 +187,35 @@ const toCSV = (rows, cols, options) => {
   return header.concat(rowsStr);
 };
 
+const fromXLSX = async (fileBlob, hasHeader = true, cols, options) => {
+  if (!hasHeader && !cols) {
+    return { error: [new PanelError('cols must be defined if hasHeader=false', null, null)] };
+  }
+  if (!fileBlob) {
+    return { cols: [], rows: [] };
+  }
+
+  let rows = [];
+  let xlsxLines;
+  try {
+    xlsxLines = await XLSXUtils.read(fileBlob, true);
+  } catch (err) {
+    return { error: [new PanelError(err?.message || err, fileBlob.name, err?.stack || null)] };
+  }
+
+  if (!cols) {
+    cols = _buildCols(xlsxLines[0]);
+  }
+
+  const errors = _validateFormat(xlsxLines, hasHeader, cols, options);
+  if (errors.length > 0) return { error: errors };
+  rows = _buildRows(xlsxLines, hasHeader, cols);
+  return { cols: cols, rows: rows };
+};
+
 const AgGridUtils = {
   fromCSV,
+  fromXLSX,
   toCSV,
 };
 
