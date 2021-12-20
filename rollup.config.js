@@ -6,6 +6,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import image from '@rollup/plugin-image';
 import visualizer from 'rollup-plugin-visualizer';
 import pkg from './package.json';
+import { terser } from 'rollup-plugin-terser';
 
 export default {
   input: './src/index.js',
@@ -17,6 +18,11 @@ export default {
     {
       file: pkg.module,
       format: 'esm',
+    },
+    {
+      file: 'dist/bundle.min.js',
+      format: 'iife',
+      name: 'version',
     },
   ],
   plugins: [
@@ -30,5 +36,6 @@ export default {
     commonjs(),
     image(),
     visualizer(),
+    terser(), // minification
   ],
 };
