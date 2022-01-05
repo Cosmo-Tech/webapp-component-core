@@ -27,6 +27,9 @@
     "url": "https://github.com/Cosmo-Tech/webapp-component-core/issues"
   },
   "homepage": "https://github.com/Cosmo-Tech/webapp-component-core#readme",
+  "browser": {
+    "fs": false
+  },
   "devDependencies": {
     "@babel/cli": "^7.14.3",
     "@babel/core": "^7.14.3",
