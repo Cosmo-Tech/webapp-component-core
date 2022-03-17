@@ -32,7 +32,7 @@
     },
 
     "commitUrl": "https://github.com/Cosmo-Tech/webapp-component-core/commit/%commit%",
-    "commitRangeUrl": "https://github.com/Cosmo-Tech/webapp-component-core/compare  /%from%...%to%?diff=split",
+    "commitRangeUrl": "https://github.com/Cosmo-Tech/webapp-component-core/compare/%from%...%to%?diff=split",
     "issueUrl": "https://github.com/Cosmo-Tech/webapp-component-core/issues/%issue%"
   }
 }
