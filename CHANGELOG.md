@@ -1,3 +1,7 @@
+## **1.7.1** <sub><sup>2022-04-04</sup></sub>
+
+- update dependencies
+
 ## **1.7.0** <sub><sup>2022-03-16</sup></sub>
 
 ### Features
