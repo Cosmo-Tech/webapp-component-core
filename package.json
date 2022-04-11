@@ -11,12 +11,6 @@
     "test": "jest --watchAll=false",
     "prettier": "npx prettier -w"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Cosmo-Tech/webapp-component-core.git"
