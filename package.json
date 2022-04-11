@@ -47,8 +47,7 @@
     "rollup": "^2.49.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.0",
-    "rollup-plugin-visualizer": "^5.5.0",
-    "typescript": "^4.4.4"
+    "rollup-plugin-visualizer": "^5.5.0"
   },
   "dependencies": {
     "csv-string": "^4.0.1",
