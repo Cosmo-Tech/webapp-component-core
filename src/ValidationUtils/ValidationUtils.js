@@ -25,34 +25,38 @@ const isNumber = (dataStr) => {
 };
 
 const isString = (data) => {
-  return typeof data === 'string';
+  return typeof data === 'string' && data.length > 0;
 };
 
-const isValid = (dataStr, type, options) => {
-  switch (type) {
-    case 'bool':
-      return isBool(dataStr);
-    case 'date':
-      if (!options.dateFormat) {
-        console.error("Missing option dateFormat, can't perform date validation.");
+const isValid = (dataStr, type, options, acceptsEmptyFields) => {
+  if (acceptsEmptyFields && dataStr === '') {
+    return true;
+  } else {
+    switch (type) {
+      case 'bool':
+        return isBool(dataStr);
+      case 'date':
+        if (!options.dateFormat) {
+          console.error("Missing option dateFormat, can't perform date validation.");
+          return false;
+        }
+        return isDate(dataStr, options.dateFormat);
+      case 'enum':
+        if (!options.enumValues) {
+          console.error("Missing option enumValues, can't perform enum validation.");
+          return false;
+        }
+        return isEnum(dataStr, options.enumValues);
+      case 'int':
+        return isInt(dataStr);
+      case 'number':
+        return isNumber(dataStr);
+      case 'string':
+        return isString(dataStr);
+      default:
+        console.error(`Unknown type "${type}", can't perform type validation.`);
         return false;
-      }
-      return isDate(dataStr, options.dateFormat);
-    case 'enum':
-      if (!options.enumValues) {
-        console.error("Missing option enumValues, can't perform enum validation.");
-        return false;
-      }
-      return isEnum(dataStr, options.enumValues);
-    case 'int':
-      return isInt(dataStr);
-    case 'number':
-      return isNumber(dataStr);
-    case 'string':
-      return isString(dataStr);
-    default:
-      console.error(`Unknown type "${type}", can't perform type validation.`);
-      return false;
+    }
   }
 };
 
