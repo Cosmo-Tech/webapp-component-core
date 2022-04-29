@@ -1,3 +1,8 @@
+## **1.7.2** <sub><sup>2022-04-29</sup></sub>
+
+- update dependencies
+- remove unnecessary dependencies @babel/cli, @babel/preset-react and typescript
+
 ## **1.7.1** <sub><sup>2022-04-04</sup></sub>
 
 - update dependencies
