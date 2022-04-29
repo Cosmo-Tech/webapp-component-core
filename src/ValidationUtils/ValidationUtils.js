@@ -25,11 +25,11 @@ const isNumber = (dataStr) => {
 };
 
 const isString = (data) => {
-  return typeof data === 'string' && data.length > 0;
+  return typeof data === 'string';
 };
 
-const isValid = (dataStr, type, options, acceptsEmptyFields) => {
-  if (acceptsEmptyFields && dataStr === '') {
+const isValid = (dataStr, type, options, canBeEmpty = false) => {
+  if (canBeEmpty && dataStr === '') {
     return true;
   } else {
     switch (type) {

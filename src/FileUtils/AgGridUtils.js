@@ -116,9 +116,7 @@ const _calculateEmptyCols = (cols) => {
 };
 
 const _processTableToTransformNonAcceptableEmptyCols = (lines, emptyCols) => {
-  return lines.map((line) =>
-    line.map((cell, index) => (!(cell === '' && !emptyCols.includes(index)) ? cell : undefined))
-  );
+  return lines.map((line) => line.map((cell, index) => (cell === '' && !emptyCols.includes(index) ? undefined : cell)));
 };
 const _buildRows = (rows, hasHeader, cols) => {
   const formattedData = [];
