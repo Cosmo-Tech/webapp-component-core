@@ -7,11 +7,11 @@ import { ValidationUtils } from '../ValidationUtils';
 import { Error as PanelError } from '../models';
 
 const _buildColumnsCountError = (missingColsCount, rowIndex, expectedColsCount, colsCount, expectedColsName, row) => {
-  const errorSummary = `Missing column${missingColsCount > 1 ? 's' : ''}`;
+  const errorSummary = `Missing field${missingColsCount > 1 ? 's' : ''}`;
   const errorLoc = `Line ${rowIndex}`;
   const errorContext =
-    `${errorSummary} (${errorLoc}) : ${expectedColsCount} columns expected, ` +
-    `but only ${colsCount} column${colsCount > 1 ? 's' : ''} found\n` +
+    `${errorSummary} (${errorLoc}) : ${expectedColsCount} fields expected, ` +
+    `but only ${colsCount} field${colsCount > 1 ? 's' : ''} found\n` +
     `Expected data format : "${expectedColsName}"\n` +
     `Incorrect Row : "${row}"`;
   return new PanelError(errorSummary, errorLoc, errorContext);
@@ -35,7 +35,7 @@ const DEFAULT_CSV_EXPORT_OPTIONS = {
 };
 
 const _forgeColumnsCountError = (row, rowIndex, expectedCols) => {
-  const colsCount = row.length;
+  const colsCount = Object.values(row).filter((el) => el !== undefined).length;
   const expectedColsCount = expectedCols.length;
   const expectedColsName = expectedCols.map((col) => col.field).join();
   const missingColsCount = expectedColsCount - colsCount;
@@ -72,16 +72,17 @@ const _validateFormat = (rows, hasHeader, cols, options) => {
   const startIndex = hasHeader ? 1 : 0;
   for (let rowIndex = startIndex; rowIndex < rows.length; rowIndex++) {
     const row = rows[rowIndex];
-    if (row.length < knownColsCount) {
+    if (row.length < knownColsCount || row.includes(undefined)) {
       errors.push(_forgeColumnsCountError(rows[rowIndex], rowIndex, colsData));
     }
     row.forEach((rowCell, colIndex) => {
       if (colIndex < knownColsCount) {
         const colType = colsData[colIndex].type;
-        if (colType) {
+        if (colType && rowCell !== undefined) {
           const enumValues = colsData[colIndex]?.enumValues || colsData[colIndex]?.cellEditorParams?.enumValues;
           const colOptions = { ...options, enumValues: enumValues };
-          if (!ValidationUtils.isValid(rowCell, colType, colOptions)) {
+          const acceptsEmptyFields = colsData[colIndex].cellEditorParams?.acceptsEmptyFields ?? false;
+          if (!ValidationUtils.isValid(rowCell, colType, colOptions, acceptsEmptyFields)) {
             errors.push(_forgeTypeError(rowCell, rowIndex, colType, colOptions, colsData, colIndex));
           }
         }
@@ -99,7 +100,6 @@ const _reformatBoolValue = (csvCellValue) => {
   } else if (['1', 'true', 'yes'].includes(csvCellValue)) {
     return 'true';
   }
-  return null;
 };
 
 const _reformatValue = (csvCellValue, colTypes) => {
@@ -111,6 +111,13 @@ const _reformatValue = (csvCellValue, colTypes) => {
 
 const _buildCols = (header) => header.map((col) => ({ field: col }));
 
+const _calculateEmptyCols = (cols) => {
+  return cols.map((_, index) => index).filter((colIndex) => cols[colIndex].cellEditorParams?.acceptsEmptyFields);
+};
+
+const _processTableToTransformNonAcceptableEmptyCols = (lines, emptyCols) => {
+  return lines.map((line) => line.map((cell, index) => (cell === '' && !emptyCols.includes(index) ? undefined : cell)));
+};
 const _buildRows = (rows, hasHeader, cols) => {
   const formattedData = [];
   const startIndex = hasHeader ? 1 : 0;
@@ -135,8 +142,9 @@ const fromCSV = (dataStr, hasHeader = true, cols, options) => {
 
   let rows = [];
   let csvLines;
+  const emptyCols = _calculateEmptyCols(cols);
   try {
-    csvLines = CSV.read(dataStr);
+    csvLines = _processTableToTransformNonAcceptableEmptyCols(CSV.read(dataStr), emptyCols);
   } catch (err) {
     return { error: [err] };
   }
@@ -197,16 +205,16 @@ const fromXLSX = async (fileBlob, hasHeader = true, cols, options) => {
 
   let rows = [];
   let xlsxLines;
+  const emptyCols = _calculateEmptyCols(cols);
   try {
-    xlsxLines = await XLSXUtils.read(fileBlob, true);
+    xlsxLines = await XLSXUtils.read(fileBlob, true, emptyCols.length > 0);
+    if (emptyCols.length > 0) xlsxLines = _processTableToTransformNonAcceptableEmptyCols(xlsxLines, emptyCols);
   } catch (err) {
     return { error: [new PanelError(err?.message || err, fileBlob.name, err?.stack || null)] };
   }
-
   if (!cols) {
     cols = _buildCols(xlsxLines[0]);
   }
-
   const errors = _validateFormat(xlsxLines, hasHeader, cols, options);
   if (errors.length > 0) return { error: errors };
   rows = _buildRows(xlsxLines, hasHeader, cols);

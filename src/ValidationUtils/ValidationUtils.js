@@ -28,7 +28,10 @@ const isString = (data) => {
   return typeof data === 'string';
 };
 
-const isValid = (dataStr, type, options) => {
+const isValid = (dataStr, type, options, canBeEmpty = false) => {
+  if (canBeEmpty && dataStr === '') {
+    return true;
+  }
   switch (type) {
     case 'bool':
       return isBool(dataStr);
