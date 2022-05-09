@@ -1,3 +1,9 @@
+## **1.8.0** <sub><sup>2022-05-09 (5d61a0e...5317d94)</sup></sub>
+
+### Features
+*  support empty fields in table component ([5d61a0e](https://github.com/Cosmo-Tech/webapp-component-core/commit/5d61a0e))
+
+
 ## **1.7.2** <sub><sup>2022-04-29</sup></sub>
 
 - update dependencies
