@@ -74,7 +74,9 @@ function initProviderIfNull() {
 }
 
 function signIn() {
-  return currentProvider.signIn();
+  return currentProvider.signIn().then((errorMessage) => {
+    return errorMessage;
+  });
 }
 
 function signOut() {
