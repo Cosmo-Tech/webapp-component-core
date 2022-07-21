@@ -119,9 +119,9 @@ export const INVALID_CUSTOMERS_ROWS = [
 
 export const EXPECTED_ERRORS_WITH_HEADER = [
   new Error(
-    'Missing columns',
+    'Missing fields',
     'Line 1',
-    'Missing columns (Line 1) : 6 columns expected, but only 1 column found\n' +
+    'Missing fields (Line 1) : 6 fields expected, but only 1 field found\n' +
       'Expected data format : "name,age,canDrinkAlcohol,favoriteDrink,birthday,height"\n' +
       'Incorrect Row : "MissingColumns"'
   ),
@@ -187,18 +187,18 @@ export const EXPECTED_ERRORS_WITH_HEADER = [
 
 export const EXPECTED_ERRORS_WITHOUT_COLS = [
   new Error(
-    'Missing columns',
+    'Missing fields',
     'Line 1',
-    'Missing columns (Line 1) : 6 columns expected, but only 1 column found\nExpected data format ' +
+    'Missing fields (Line 1) : 6 fields expected, but only 1 field found\nExpected data format ' +
       ': "name,age,canDrinkAlcohol,favoriteDrink,birthday,height"\nIncorrect Row : "MissingColumns"'
   ),
 ];
 
 export const EXPECTED_ERRORS_WITHOUT_HEADER = [
   new Error(
-    'Missing columns',
+    'Missing fields',
     'Line 0',
-    'Missing columns (Line 0) : 6 columns expected, but only 1 column found\n' +
+    'Missing fields (Line 0) : 6 fields expected, but only 1 field found\n' +
       'Expected data format : "name,age,canDrinkAlcohol,favoriteDrink,birthday,height"\n' +
       'Incorrect Row : "MissingColumns"'
   ),

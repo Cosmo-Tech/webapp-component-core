@@ -60,7 +60,7 @@ describe('parse valid CSV strings', () => {
 });
 
 describe('parse with invalid parameters', () => {
-  test('missing columns definition', () => {
+  test('missing fields definition', () => {
     const res = AgGridUtils.fromCSV('', false, undefined);
     expect(res.error).toStrictEqual([new Error('cols must be defined if hasHeader=false', null, null)]);
   });
