@@ -112,6 +112,9 @@ const _reformatValue = (csvCellValue, colTypes) => {
 const _buildCols = (header) => header.map((col) => ({ field: col }));
 
 const _calculateEmptyCols = (cols) => {
+  if (cols === undefined) {
+    return [];
+  }
   return cols.map((_, index) => index).filter((colIndex) => cols[colIndex].cellEditorParams?.acceptsEmptyFields);
 };
 
