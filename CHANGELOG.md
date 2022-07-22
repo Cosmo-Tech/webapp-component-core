@@ -1,8 +1,18 @@
+## **1.9.0** <sub><sup>2022-07-22 (aedf63f...3ee8718)</sup></sub>
+
+### Features
+
+- implement scenarioIsValid function ([06d23d8](https://github.com/Cosmo-Tech/webapp-component-core/commit/06d23d8))
+
+### Bug Fixes
+
+- fix error during parsing of CSV strings when columns list is undefined ([a72b5b5](https://github.com/Cosmo-Tech/webapp-component-core/commit/a72b5b5))
+
 ## **1.8.0** <sub><sup>2022-05-09 (5d61a0e...5317d94)</sup></sub>
 
 ### Features
-*  support empty fields in table component ([5d61a0e](https://github.com/Cosmo-Tech/webapp-component-core/commit/5d61a0e))
 
+- support empty fields in table component ([5d61a0e](https://github.com/Cosmo-Tech/webapp-component-core/commit/5d61a0e))
 
 ## **1.7.2** <sub><sup>2022-04-29</sup></sub>
 
