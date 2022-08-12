@@ -1,3 +1,7 @@
+## **1.9.1** <sub><sup>2022-08-12 (3adacea...3adacea)</sup></sub>
+
+- update dependencies
+
 ## **1.9.0** <sub><sup>2022-07-22 (aedf63f...3ee8718)</sup></sub>
 
 ### Features
