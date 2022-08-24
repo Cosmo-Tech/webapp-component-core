@@ -121,6 +121,13 @@ function isUserSignedIn(callback) {
   return currentProvider.isUserSignedIn(callback);
 }
 
+function getUserEmail() {
+  if (currentProvider === undefined) {
+    return undefined;
+  }
+  return currentProvider.getUserEmail();
+}
+
 function getUserName() {
   if (currentProvider === undefined) {
     return undefined;
@@ -156,6 +163,7 @@ const Auth = {
   signOut,
   onAuthStateChanged,
   isUserSignedIn,
+  getUserEmail,
   getUserName,
   getUserId,
   getUserRoles,
