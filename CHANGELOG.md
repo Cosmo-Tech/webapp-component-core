@@ -1,3 +1,7 @@
+## **1.9.2** <sub><sup>2022-09-16 (7a56f6f...7a56f6f)</sup></sub>
+
+- update dependencies
+
 ## **1.9.1** <sub><sup>2022-08-12 (3adacea...3adacea)</sup></sub>
 
 - update dependencies
