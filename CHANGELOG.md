@@ -1,3 +1,9 @@
+## **1.10.0** <sub><sup>2022-10-12 (b1db393...b1db393)</sup></sub>
+
+### Features
+
+- add user email in auth data ([b1db393](https://github.com/Cosmo-Tech/webapp-component-core/commit/b1db393))
+
 ## **1.9.2** <sub><sup>2022-09-16 (7a56f6f...7a56f6f)</sup></sub>
 
 - update dependencies
