@@ -1,3 +1,7 @@
+## **1.10.1** <sub><sup>2022-11-04 (ed24c96...ed24c96)</sup></sub>
+
+- update dependencies
+
 ## **1.10.0** <sub><sup>2022-10-12 (b1db393...b1db393)</sup></sub>
 
 ### Features
