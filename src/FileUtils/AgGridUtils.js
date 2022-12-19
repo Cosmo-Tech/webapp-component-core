@@ -167,7 +167,8 @@ const _generateHeader = (cols, separator = ',') => {
 };
 
 const _generateRow = (row, cols, separator = ',') => {
-  return cols.map((col) => row[col.field]).join(separator);
+  // CSV.write(...) adds a newline at the end of the string, hence the "slice(0, -2)"
+  return CSV.write([cols.map((col) => row[col.field])], separator).slice(0, -2);
 };
 
 const _generateRows = (rows, cols, colSep = ',', rowSep = '\n') => {

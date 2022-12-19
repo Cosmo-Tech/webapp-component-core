@@ -9,8 +9,8 @@ const read = (dataStr) => {
   });
 };
 
-const write = (dataArray) => {
-  return CSV.stringify(dataArray);
+const write = (dataArray, separator) => {
+  return CSV.stringify(dataArray, separator);
 };
 
 const CSVUtils = {
