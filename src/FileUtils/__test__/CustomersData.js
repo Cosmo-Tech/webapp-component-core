@@ -52,6 +52,26 @@ export const SIMPLE_AGGRID_FORMATTED_ROWS = [
   { name: 'Maria', age: '34', canDrinkAlcohol: 'true', favoriteDrink: 'Wine', birthday: '19/03/1987', height: '1.90' },
   { name: 'Howard', age: '34', canDrinkAlcohol: 'true', favoriteDrink: 'Beer', birthday: '12/05/1987', height: '1.83' },
 ];
+export const SIMPLE_AGGRID_FORMATTED_ROWS_WITH_DELIMITERS = [
+  {
+    name: '"a,b,c"',
+    age: '10',
+    canDrinkAlcohol: 'false',
+    favoriteDrink: 'AppleJuice',
+    birthday: '01/04/2011',
+    height: '1.40',
+  },
+  {
+    name: 'a,b,c',
+    age: '8',
+    canDrinkAlcohol: 'false',
+    favoriteDrink: 'AppleJuice',
+    birthday: '09/05/2013',
+    height: '1.41',
+  },
+  { name: 'Maria,', age: '34', canDrinkAlcohol: 'true', favoriteDrink: 'Wine', birthday: '19/03/1987', height: '1.90' },
+  { name: 'Howard', age: '34', canDrinkAlcohol: 'true', favoriteDrink: 'Beer', birthday: '12/05/1987', height: '1.83' },
+];
 
 export const COMPLEX_AGGRID_FORMATTED_ROWS = [
   {
@@ -268,3 +288,10 @@ export const EXPECTED_CUSTOM_CSV_OUTPUT =
   'Lily;8;false;AppleJuice;09/05/2013;1.41\n\n' +
   'Maria;34;true;Wine;19/03/1987;1.90\n\n' +
   'Howard;34;true;Beer;12/05/1987;1.83';
+
+export const EXPECTED_CSV_OUTPUT_WITH_DELIMITERS =
+  'name,age,canDrinkAlcohol,favoriteDrink,birthday,height\n' +
+  '"""a,b,c""",10,false,AppleJuice,01/04/2011,1.40\n' +
+  '"a,b,c",8,false,AppleJuice,09/05/2013,1.41\n' +
+  '"Maria,",34,true,Wine,19/03/1987,1.90\n' +
+  'Howard,34,true,Beer,12/05/1987,1.83';

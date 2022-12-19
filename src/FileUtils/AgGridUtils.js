@@ -167,7 +167,10 @@ const _generateHeader = (cols, separator = ',') => {
 };
 
 const _generateRow = (row, cols, separator = ',') => {
-  return cols.map((col) => row[col.field]).join(separator);
+  const fields = [cols.map((col) => row[col.field])];
+  const csvLine = CSV.write(fields, separator);
+  // CSV.write(...) adds a newline at the end of the string, we need to remove it before returning the row
+  return csvLine.replace(/\r?\n$/, '');
 };
 
 const _generateRows = (rows, cols, colSep = ',', rowSep = '\n') => {

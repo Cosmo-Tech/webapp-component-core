@@ -13,6 +13,8 @@ import {
   EXPECTED_ERRORS_WITH_HEADER,
   EXPECTED_ERRORS_WITHOUT_HEADER,
   EXPECTED_CUSTOM_CSV_OUTPUT,
+  EXPECTED_CSV_OUTPUT_WITH_DELIMITERS,
+  SIMPLE_AGGRID_FORMATTED_ROWS_WITH_DELIMITERS,
 } from './CustomersData';
 import { AgGridUtils } from '..';
 import { Error } from '../../models';
@@ -86,9 +88,9 @@ describe('parse invalid CSV strings', () => {
   });
 });
 
-describe('export CSV string', () => {
-  const defaultOptions = { desc: 'default options' };
-  const defaultOptionsNoHeader = { desc: 'default options without header', writeHeader: false };
+describe('export to CSV string', () => {
+  const options = { desc: 'default options' };
+  const optionsNoHeader = { desc: 'default options without header', writeHeader: false };
   const customOptions = {
     desc: 'custom options',
     colSep: ';',
@@ -103,14 +105,15 @@ describe('export CSV string', () => {
   const csvWithoutHeaderStr = buildCSVStr(SIMPLE_CUSTOMERS_ROWS);
 
   test.each`
-    options                   | rows                            | cols              | expectedOutput
-    ${defaultOptions}         | ${[]}                           | ${CUSTOMERS_COLS} | ${csvHeaderStr}
-    ${defaultOptions}         | ${SIMPLE_AGGRID_FORMATTED_ROWS} | ${CUSTOMERS_COLS} | ${csvWithHeaderStr}
-    ${defaultOptionsNoHeader} | ${[]}                           | ${CUSTOMERS_COLS} | ${''}
-    ${defaultOptionsNoHeader} | ${SIMPLE_AGGRID_FORMATTED_ROWS} | ${CUSTOMERS_COLS} | ${csvWithoutHeaderStr}
-    ${customOptions}          | ${SIMPLE_AGGRID_FORMATTED_ROWS} | ${CUSTOMERS_COLS} | ${EXPECTED_CUSTOM_CSV_OUTPUT}
-  `('Test $#: with $options.desc, rows="$rows" and cols="$cols"', ({ options, rows, cols, expectedOutput }) => {
-    const res = AgGridUtils.toCSV(rows, cols, options);
+    options            | rows                                            | expectedOutput
+    ${options}         | ${[]}                                           | ${csvHeaderStr}
+    ${options}         | ${SIMPLE_AGGRID_FORMATTED_ROWS}                 | ${csvWithHeaderStr}
+    ${optionsNoHeader} | ${[]}                                           | ${''}
+    ${optionsNoHeader} | ${SIMPLE_AGGRID_FORMATTED_ROWS}                 | ${csvWithoutHeaderStr}
+    ${customOptions}   | ${SIMPLE_AGGRID_FORMATTED_ROWS}                 | ${EXPECTED_CUSTOM_CSV_OUTPUT}
+    ${options}         | ${SIMPLE_AGGRID_FORMATTED_ROWS_WITH_DELIMITERS} | ${EXPECTED_CSV_OUTPUT_WITH_DELIMITERS}
+  `('Test $#: with $options.desc, rows="$rows"', ({ options, rows, expectedOutput }) => {
+    const res = AgGridUtils.toCSV(rows, CUSTOMERS_COLS, options);
     expect(res).toStrictEqual(expectedOutput);
   });
 });
