@@ -1,3 +1,13 @@
+## **1.10.3** <sub><sup>2022-12-20 (141a1b9...141a1b9)</sup></sub>
+
+### Bug Fixes
+
+- fix export of CSV files with fields containing commas ([141a1b9](https://github.com/Cosmo-Tech/webapp-component-core/commit/141a1b9))
+
+## **1.10.2** <sub><sup>2022-12-05</sup></sub>
+
+- update dependencies
+
 ## **1.10.1** <sub><sup>2022-11-04 (ed24c96...ed24c96)</sup></sub>
 
 - update dependencies
