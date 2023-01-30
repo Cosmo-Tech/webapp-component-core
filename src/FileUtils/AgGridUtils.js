@@ -80,7 +80,7 @@ const _validateFormat = (rows, hasHeader, cols, options) => {
         const colType = colsData[colIndex].type;
         if (colType && rowCell !== undefined) {
           const enumValues = colsData[colIndex]?.enumValues || colsData[colIndex]?.cellEditorParams?.enumValues;
-          const colOptions = { ...options, enumValues: enumValues };
+          const colOptions = { ...options, enumValues };
           const acceptsEmptyFields = colsData[colIndex].cellEditorParams?.acceptsEmptyFields ?? false;
           if (!ValidationUtils.isValid(rowCell, colType, colOptions, acceptsEmptyFields)) {
             errors.push(_forgeTypeError(rowCell, rowIndex, colType, colOptions, colsData, colIndex));
@@ -159,7 +159,7 @@ const fromCSV = (dataStr, hasHeader = true, cols, options) => {
   const errors = _validateFormat(csvLines, hasHeader, cols, options);
   if (errors.length > 0) return { error: errors };
   rows = _buildRows(csvLines, hasHeader, cols);
-  return { cols: cols, rows: rows };
+  return { cols, rows };
 };
 
 const _generateHeader = (cols, separator = ',') => {
@@ -224,7 +224,7 @@ const fromXLSX = async (fileBlob, hasHeader = true, cols, options) => {
   const errors = _validateFormat(xlsxLines, hasHeader, cols, options);
   if (errors.length > 0) return { error: errors };
   rows = _buildRows(xlsxLines, hasHeader, cols);
-  return { cols: cols, rows: rows };
+  return { cols, rows };
 };
 
 const AgGridUtils = {

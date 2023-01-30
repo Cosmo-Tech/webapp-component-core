@@ -112,7 +112,7 @@ describe('export to CSV string', () => {
     ${optionsNoHeader} | ${SIMPLE_AGGRID_FORMATTED_ROWS}                 | ${csvWithoutHeaderStr}
     ${customOptions}   | ${SIMPLE_AGGRID_FORMATTED_ROWS}                 | ${EXPECTED_CUSTOM_CSV_OUTPUT}
     ${options}         | ${SIMPLE_AGGRID_FORMATTED_ROWS_WITH_DELIMITERS} | ${EXPECTED_CSV_OUTPUT_WITH_DELIMITERS}
-  `('Test $#: with $options.desc, rows="$rows"', ({ options, rows, expectedOutput }) => {
+  `('$#: with $options.desc, rows="$rows"', ({ options, rows, expectedOutput }) => {
     const res = AgGridUtils.toCSV(rows, CUSTOMERS_COLS, options);
     expect(res).toStrictEqual(expectedOutput);
   });
