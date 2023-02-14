@@ -29,8 +29,16 @@ const read = async (fileBlob, forceStr, emptyCols) => {
   return data;
 };
 
+const write = (data, cols) => {
+  const worksheet = XLSX.utils.json_to_sheet(data, { header: cols });
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+  return XLSX.write(workbook, { type: 'array' });
+};
+
 const XLSXUtils = {
   read,
+  write,
 };
 
 export default XLSXUtils;

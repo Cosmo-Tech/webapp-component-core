@@ -33,6 +33,9 @@ const DEFAULT_CSV_EXPORT_OPTIONS = {
   rowSep: '\n',
   writeHeader: true,
 };
+const DEFAULT_XLSX_EXPORT_OPTIONS = {
+  writeHeader: true,
+};
 
 const _forgeColumnsCountError = (row, rowIndex, expectedCols) => {
   const colsCount = Object.values(row).filter((el) => el !== undefined).length;
@@ -201,6 +204,21 @@ const toCSV = (rows, cols, options) => {
   return header.concat(rowsStr);
 };
 
+// TODO: some metadata of cols & options ('acceptsEmptyFields', columns types, dates format, ...) are not used right
+// now, but they could be used in a future version to improve the format of the exported Excel file
+const toXLSX = (rows, cols, options) => {
+  if (!rows) {
+    rows = [];
+  }
+
+  options = {
+    ...DEFAULT_XLSX_EXPORT_OPTIONS,
+    ...options,
+  };
+  const header = options.writeHeader ? cols.map((col) => col.field) : null;
+  return XLSXUtils.write(rows, header);
+};
+
 const fromXLSX = async (fileBlob, hasHeader = true, cols, options) => {
   if (!hasHeader && !cols) {
     return { error: [new PanelError('cols must be defined if hasHeader=false', null, null)] };
@@ -231,6 +249,7 @@ const AgGridUtils = {
   fromCSV,
   fromXLSX,
   toCSV,
+  toXLSX,
 };
 
 export default AgGridUtils;
