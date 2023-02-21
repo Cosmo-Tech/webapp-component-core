@@ -1,3 +1,10 @@
+## **1.11.0** <sub><sup>2023-02-21 (69a786b...36098e9)</sup></sub>
+
+### Features
+
+- add function to write XLSX files (`XLSXUtils.write`)
+- add function to export XLSX files from ag\-grid data (`AgGridUtils.toXLSX`)
+
 ## **1.10.3** <sub><sup>2022-12-20 (141a1b9...141a1b9)</sup></sub>
 
 ### Bug Fixes
