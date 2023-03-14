@@ -1,3 +1,9 @@
+## **1.11.1** <sub><sup>2023-03-14 (62001af...62001af)</sup></sub>
+
+### Bug Fixes
+
+- fix missing method `getUserEmail` in AuthDev ([62001af](https://github.com/Cosmo-Tech/webapp-component-core/commit/62001af))
+
 ## **1.11.0** <sub><sup>2023-02-21 (69a786b...36098e9)</sup></sub>
 
 ### Features
