@@ -6,12 +6,23 @@ import XLSXUtils from './XLSXUtils';
 import { ValidationUtils } from '../ValidationUtils';
 import { Error as PanelError } from '../models';
 
-const _buildColumnsCountError = (missingColsCount, rowIndex, expectedColsCount, colsCount, expectedColsName, row) => {
+const _buildMissingColumnsError = (missingColsCount, rowIndex, expectedColsCount, colsCount, expectedColsName, row) => {
   const errorSummary = `Missing field${missingColsCount > 1 ? 's' : ''}`;
   const errorLoc = `Line ${rowIndex}`;
   const errorContext =
     `${errorSummary} (${errorLoc}) : ${expectedColsCount} fields expected, ` +
     `but only ${colsCount} field${colsCount > 1 ? 's' : ''} found\n` +
+    `Expected data format : "${expectedColsName}"\n` +
+    `Incorrect Row : "${row}"`;
+  return new PanelError(errorSummary, errorLoc, errorContext);
+};
+
+const _buildTooManyColumnsError = (rowIndex, expectedColsCount, colsCount, expectedColsName, row) => {
+  const errorSummary = 'Too many fields';
+  const errorLoc = `Line ${rowIndex}`;
+  const errorContext =
+    `${errorSummary} (${errorLoc}) : ${expectedColsCount} fields expected, ` +
+    `but ${colsCount} field${colsCount > 1 ? 's' : ''} found\n` +
     `Expected data format : "${expectedColsName}"\n` +
     `Incorrect Row : "${row}"`;
   return new PanelError(errorSummary, errorLoc, errorContext);
@@ -42,7 +53,9 @@ const _forgeColumnsCountError = (row, rowIndex, expectedCols) => {
   const expectedColsCount = expectedCols.length;
   const expectedColsName = expectedCols.map((col) => col.field).join();
   const missingColsCount = expectedColsCount - colsCount;
-  return _buildColumnsCountError(missingColsCount, rowIndex, expectedColsCount, colsCount, expectedColsName, row);
+  if (missingColsCount > 0)
+    return _buildMissingColumnsError(missingColsCount, rowIndex, expectedColsCount, colsCount, expectedColsName, row);
+  return _buildTooManyColumnsError(rowIndex, expectedColsCount, colsCount, expectedColsName, row);
 };
 
 const _forgeTypeError = (value, rowIndex, type, options, colsData, colIndex) => {
@@ -75,9 +88,8 @@ const _validateFormat = (rows, hasHeader, cols, options) => {
   const startIndex = hasHeader ? 1 : 0;
   for (let rowIndex = startIndex; rowIndex < rows.length; rowIndex++) {
     const row = rows[rowIndex];
-    if (row.length < knownColsCount || row.includes(undefined)) {
+    if (row.length !== knownColsCount || row.includes(undefined))
       errors.push(_forgeColumnsCountError(rows[rowIndex], rowIndex, colsData));
-    }
     row.forEach((rowCell, colIndex) => {
       if (colIndex < knownColsCount) {
         const colType = colsData[colIndex].type;
