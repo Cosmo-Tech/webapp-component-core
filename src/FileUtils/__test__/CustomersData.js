@@ -139,146 +139,146 @@ export const INVALID_CUSTOMERS_ROWS = [
 
 export const EXPECTED_ERRORS_WITH_HEADER = [
   new Error(
-    'Missing fields',
-    'Line 1',
-    'Missing fields (Line 1) : 6 fields expected, but only 1 field found\n' +
+    'Too few fields',
+    'Line 2',
+    'Too few fields (Line 2) : Expected 6 fields, found 1\n' +
       'Expected data format : "name,age,canDrinkAlcohol,favoriteDrink,birthday,height"\n' +
       'Incorrect Row : "MissingColumns"'
   ),
   new Error(
     'Incorrect int value',
-    'Line 2 , Column 1 ("age")',
-    'Incorrect int value (Line 2 , Column 1 ("age"))\nIncorrect value : "bad_int" for type int'
+    'Line 3 , Column 2 ("age")',
+    'Incorrect int value (Line 3 , Column 2 ("age"))\nIncorrect value : "bad_int" for type int'
   ),
   new Error(
     'Incorrect bool value',
-    'Line 3 , Column 2 ("canDrinkAlcohol")',
-    'Incorrect bool value (Line 3 , Column 2 ("canDrinkAlcohol"))\nIncorrect value : "bad_bool" for type bool'
+    'Line 4 , Column 3 ("canDrinkAlcohol")',
+    'Incorrect bool value (Line 4 , Column 3 ("canDrinkAlcohol"))\nIncorrect value : "bad_bool" for type bool'
   ),
   new Error(
     'Incorrect enum value',
-    'Line 4 , Column 3 ("favoriteDrink")',
-    'Incorrect enum value (Line 4 , Column 3 ("favoriteDrink"))\n' +
+    'Line 5 , Column 4 ("favoriteDrink")',
+    'Incorrect enum value (Line 5 , Column 4 ("favoriteDrink"))\n' +
       'Incorrect value : "bad_enum" for type enum\n' +
       'Expected values: [AppleJuice,Beer,OrangeJuice,Wine]'
   ),
   new Error(
     'Incorrect date value',
-    'Line 5 , Column 4 ("birthday")',
-    'Incorrect date value (Line 5 , Column 4 ("birthday"))\n' +
+    'Line 6 , Column 5 ("birthday")',
+    'Incorrect date value (Line 6 , Column 5 ("birthday"))\n' +
       'Incorrect value : "bad_date" for type date\n' +
       'Expected format: dd/MM/yyyy'
   ),
   new Error(
     'Incorrect number value',
-    'Line 6 , Column 5 ("height")',
-    'Incorrect number value (Line 6 , Column 5 ("height"))\nIncorrect value : "bad_number" for type number'
+    'Line 7 , Column 6 ("height")',
+    'Incorrect number value (Line 7 , Column 6 ("height"))\nIncorrect value : "bad_number" for type number'
   ),
   new Error(
     'Incorrect int value',
-    'Line 7 , Column 1 ("age")',
-    'Incorrect int value (Line 7 , Column 1 ("age"))\nIncorrect value : "bad_int" for type int'
+    'Line 8 , Column 2 ("age")',
+    'Incorrect int value (Line 8 , Column 2 ("age"))\nIncorrect value : "bad_int" for type int'
   ),
   new Error(
     'Incorrect bool value',
-    'Line 7 , Column 2 ("canDrinkAlcohol")',
-    'Incorrect bool value (Line 7 , Column 2 ("canDrinkAlcohol"))\nIncorrect value : "bad_bool" for type bool'
+    'Line 8 , Column 3 ("canDrinkAlcohol")',
+    'Incorrect bool value (Line 8 , Column 3 ("canDrinkAlcohol"))\nIncorrect value : "bad_bool" for type bool'
   ),
   new Error(
     'Incorrect enum value',
-    'Line 7 , Column 3 ("favoriteDrink")',
-    'Incorrect enum value (Line 7 , Column 3 ("favoriteDrink"))\n' +
+    'Line 8 , Column 4 ("favoriteDrink")',
+    'Incorrect enum value (Line 8 , Column 4 ("favoriteDrink"))\n' +
       'Incorrect value : "bad_enum" for type enum\n' +
       'Expected values: [AppleJuice,Beer,OrangeJuice,Wine]'
   ),
   new Error(
     'Incorrect date value',
-    'Line 7 , Column 4 ("birthday")',
-    'Incorrect date value (Line 7 , Column 4 ("birthday"))\n' +
+    'Line 8 , Column 5 ("birthday")',
+    'Incorrect date value (Line 8 , Column 5 ("birthday"))\n' +
       'Incorrect value : "bad_date" for type date\n' +
       'Expected format: dd/MM/yyyy'
   ),
   new Error(
     'Incorrect number value',
-    'Line 7 , Column 5 ("height")',
-    'Incorrect number value (Line 7 , Column 5 ("height"))\nIncorrect value : "bad_number" for type number'
+    'Line 8 , Column 6 ("height")',
+    'Incorrect number value (Line 8 , Column 6 ("height"))\nIncorrect value : "bad_number" for type number'
   ),
 ];
 
 export const EXPECTED_ERRORS_WITHOUT_COLS = [
   new Error(
-    'Missing fields',
-    'Line 1',
-    'Missing fields (Line 1) : 6 fields expected, but only 1 field found\nExpected data format ' +
+    'Too few fields',
+    'Line 2',
+    'Too few fields (Line 2) : Expected 6 fields, found 1\nExpected data format ' +
       ': "name,age,canDrinkAlcohol,favoriteDrink,birthday,height"\nIncorrect Row : "MissingColumns"'
   ),
 ];
 
 export const EXPECTED_ERRORS_WITHOUT_HEADER = [
   new Error(
-    'Missing fields',
-    'Line 0',
-    'Missing fields (Line 0) : 6 fields expected, but only 1 field found\n' +
+    'Too few fields',
+    'Line 1',
+    'Too few fields (Line 1) : Expected 6 fields, found 1\n' +
       'Expected data format : "name,age,canDrinkAlcohol,favoriteDrink,birthday,height"\n' +
       'Incorrect Row : "MissingColumns"'
   ),
   new Error(
     'Incorrect int value',
-    'Line 1 , Column 1 ("age")',
-    'Incorrect int value (Line 1 , Column 1 ("age"))\nIncorrect value : "bad_int" for type int'
+    'Line 2 , Column 2 ("age")',
+    'Incorrect int value (Line 2 , Column 2 ("age"))\nIncorrect value : "bad_int" for type int'
   ),
   new Error(
     'Incorrect bool value',
-    'Line 2 , Column 2 ("canDrinkAlcohol")',
-    'Incorrect bool value (Line 2 , Column 2 ("canDrinkAlcohol"))\nIncorrect value : "bad_bool" for type bool'
+    'Line 3 , Column 3 ("canDrinkAlcohol")',
+    'Incorrect bool value (Line 3 , Column 3 ("canDrinkAlcohol"))\nIncorrect value : "bad_bool" for type bool'
   ),
   new Error(
     'Incorrect enum value',
-    'Line 3 , Column 3 ("favoriteDrink")',
-    'Incorrect enum value (Line 3 , Column 3 ("favoriteDrink"))\n' +
+    'Line 4 , Column 4 ("favoriteDrink")',
+    'Incorrect enum value (Line 4 , Column 4 ("favoriteDrink"))\n' +
       'Incorrect value : "bad_enum" for type enum\n' +
       'Expected values: [AppleJuice,Beer,OrangeJuice,Wine]'
   ),
   new Error(
     'Incorrect date value',
-    'Line 4 , Column 4 ("birthday")',
-    'Incorrect date value (Line 4 , Column 4 ("birthday"))\n' +
+    'Line 5 , Column 5 ("birthday")',
+    'Incorrect date value (Line 5 , Column 5 ("birthday"))\n' +
       'Incorrect value : "bad_date" for type date\n' +
       'Expected format: dd/MM/yyyy'
   ),
   new Error(
     'Incorrect number value',
-    'Line 5 , Column 5 ("height")',
-    'Incorrect number value (Line 5 , Column 5 ("height"))\nIncorrect value : "bad_number" for type number'
+    'Line 6 , Column 6 ("height")',
+    'Incorrect number value (Line 6 , Column 6 ("height"))\nIncorrect value : "bad_number" for type number'
   ),
   new Error(
     'Incorrect int value',
-    'Line 6 , Column 1 ("age")',
-    'Incorrect int value (Line 6 , Column 1 ("age"))\nIncorrect value : "bad_int" for type int'
+    'Line 7 , Column 2 ("age")',
+    'Incorrect int value (Line 7 , Column 2 ("age"))\nIncorrect value : "bad_int" for type int'
   ),
   new Error(
     'Incorrect bool value',
-    'Line 6 , Column 2 ("canDrinkAlcohol")',
-    'Incorrect bool value (Line 6 , Column 2 ("canDrinkAlcohol"))\nIncorrect value : "bad_bool" for type bool'
+    'Line 7 , Column 3 ("canDrinkAlcohol")',
+    'Incorrect bool value (Line 7 , Column 3 ("canDrinkAlcohol"))\nIncorrect value : "bad_bool" for type bool'
   ),
   new Error(
     'Incorrect enum value',
-    'Line 6 , Column 3 ("favoriteDrink")',
-    'Incorrect enum value (Line 6 , Column 3 ("favoriteDrink"))\n' +
+    'Line 7 , Column 4 ("favoriteDrink")',
+    'Incorrect enum value (Line 7 , Column 4 ("favoriteDrink"))\n' +
       'Incorrect value : "bad_enum" for type enum\n' +
       'Expected values: [AppleJuice,Beer,OrangeJuice,Wine]'
   ),
   new Error(
     'Incorrect date value',
-    'Line 6 , Column 4 ("birthday")',
-    'Incorrect date value (Line 6 , Column 4 ("birthday"))\n' +
+    'Line 7 , Column 5 ("birthday")',
+    'Incorrect date value (Line 7 , Column 5 ("birthday"))\n' +
       'Incorrect value : "bad_date" for type date\n' +
       'Expected format: dd/MM/yyyy'
   ),
   new Error(
     'Incorrect number value',
-    'Line 6 , Column 5 ("height")',
-    'Incorrect number value (Line 6 , Column 5 ("height"))\nIncorrect value : "bad_number" for type number'
+    'Line 7 , Column 6 ("height")',
+    'Incorrect number value (Line 7 , Column 6 ("height"))\nIncorrect value : "bad_number" for type number'
   ),
 ];
 
