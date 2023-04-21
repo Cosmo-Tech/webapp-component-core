@@ -231,7 +231,7 @@ const fromXLSX = async (fileBlob, hasHeader = true, cols, options) => {
   let xlsxLines;
   const emptyCols = _calculateEmptyCols(cols);
   try {
-    xlsxLines = await XLSXUtils.read(fileBlob, true, emptyCols.length > 0);
+    xlsxLines = await XLSXUtils.read(fileBlob, true, emptyCols.length > 0, cols, options, hasHeader);
     if (emptyCols.length > 0) xlsxLines = _processTableToTransformNonAcceptableEmptyCols(xlsxLines, emptyCols);
   } catch (err) {
     return { error: [new PanelError(err?.message || err, fileBlob.name, err?.stack || null)] };
