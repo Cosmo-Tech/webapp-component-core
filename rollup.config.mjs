@@ -5,7 +5,7 @@ import postcss from 'rollup-plugin-postcss';
 import resolve from '@rollup/plugin-node-resolve';
 import image from '@rollup/plugin-image';
 import { visualizer } from 'rollup-plugin-visualizer';
-import pkg from './package.json';
+import pkg from './package.json' assert { type: 'json' };
 
 export default {
   input: './src/index.js',
