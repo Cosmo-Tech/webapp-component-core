@@ -6,20 +6,28 @@ import XLSXUtils from './XLSXUtils';
 import { ValidationUtils } from '../ValidationUtils';
 import { Error as PanelError } from '../models';
 
-const _buildColumnsCountError = (missingColsCount, rowIndex, expectedColsCount, colsCount, expectedColsName, row) => {
-  const errorSummary = `Missing field${missingColsCount > 1 ? 's' : ''}`;
-  const errorLoc = `Line ${rowIndex}`;
+const _buildEmptyFieldError = (rowLineNumber, expectedCols, colIndex) => {
+  const errorSummary = `Empty field`;
+  const errorLoc = `Line ${rowLineNumber}, Column ${colIndex + 1} ("${expectedCols[colIndex].field}")`;
+  const errorContext = `${errorSummary}: ${errorLoc} is required`;
+  return new PanelError(errorSummary, errorLoc, errorContext);
+};
+
+const _buildNumberColumnsError = (rowLineNumber, expectedCols, row) => {
+  const expectedColsCount = expectedCols.length;
+  const expectedColsName = expectedCols.map((col) => col.field).join();
+  const errorSummary = row.length > expectedColsCount ? 'Too many fields' : 'Too few fields';
+  const errorLoc = `Line ${rowLineNumber}`;
   const errorContext =
-    `${errorSummary} (${errorLoc}) : ${expectedColsCount} fields expected, ` +
-    `but only ${colsCount} field${colsCount > 1 ? 's' : ''} found\n` +
+    `${errorSummary} (${errorLoc}) : Expected ${expectedColsCount} fields, found ${row.length}\n` +
     `Expected data format : "${expectedColsName}"\n` +
     `Incorrect Row : "${row}"`;
   return new PanelError(errorSummary, errorLoc, errorContext);
 };
 
-const _buildTypeError = (type, rowIndex, colIndex, colsData, value, expected) => {
+const _buildTypeError = (type, rowLineNumber, colIndex, colsData, value, expected) => {
   const errorSummary = `Incorrect ${type} value`;
-  const errorLoc = `Line ${rowIndex} , Column ${colIndex} ("${colsData[colIndex].field}")`;
+  const errorLoc = `Line ${rowLineNumber} , Column ${colIndex + 1} ("${colsData[colIndex].field}")`;
   const errorContext = `${errorSummary} (${errorLoc})\n` + `Incorrect value : "${value}" for type ${type}`;
   if (!expected || expected.length === 0) {
     return new PanelError(errorSummary, errorLoc, errorContext);
@@ -37,22 +45,22 @@ const DEFAULT_XLSX_EXPORT_OPTIONS = {
   writeHeader: true,
 };
 
-const _forgeColumnsCountError = (row, rowIndex, expectedCols) => {
-  const colsCount = Object.values(row).filter((el) => el !== undefined).length;
-  const expectedColsCount = expectedCols.length;
-  const expectedColsName = expectedCols.map((col) => col.field).join();
-  const missingColsCount = expectedColsCount - colsCount;
-  return _buildColumnsCountError(missingColsCount, rowIndex, expectedColsCount, colsCount, expectedColsName, row);
+const _forgeColumnsCountError = (row, rowLineNumber, expectedCols, errors) => {
+  const valuesInRange = row.slice(0, expectedCols.length);
+  valuesInRange.forEach((column, i) => {
+    if (column === undefined) errors.push(_buildEmptyFieldError(rowLineNumber, expectedCols, i));
+  });
+  if (row.length !== expectedCols.length) errors.push(_buildNumberColumnsError(rowLineNumber, expectedCols, row));
 };
 
-const _forgeTypeError = (value, rowIndex, type, options, colsData, colIndex) => {
+const _forgeTypeError = (value, rowLineNumber, type, options, colsData, colIndex) => {
   let expected = '';
   if (type === 'enum') {
     expected = `Expected values: [${options.enumValues.join()}]`;
   } else if (type === 'date') {
     expected = `Expected format: ${options.dateFormat}`;
   }
-  return _buildTypeError(type, rowIndex, colIndex, colsData, value, expected);
+  return _buildTypeError(type, rowLineNumber, colIndex, colsData, value, expected);
 };
 
 const _getColTypeFromTypeArray = (typeArray) => {
@@ -75,9 +83,9 @@ const _validateFormat = (rows, hasHeader, cols, options) => {
   const startIndex = hasHeader ? 1 : 0;
   for (let rowIndex = startIndex; rowIndex < rows.length; rowIndex++) {
     const row = rows[rowIndex];
-    if (row.length < knownColsCount || row.includes(undefined)) {
-      errors.push(_forgeColumnsCountError(rows[rowIndex], rowIndex, colsData));
-    }
+    while (row[row.length - 1] === undefined && row.length > knownColsCount) row.pop();
+    if (row.length !== knownColsCount || row.includes(undefined))
+      _forgeColumnsCountError(row, rowIndex + 1, colsData, errors);
     row.forEach((rowCell, colIndex) => {
       if (colIndex < knownColsCount) {
         const colType = colsData[colIndex].type;
@@ -86,7 +94,7 @@ const _validateFormat = (rows, hasHeader, cols, options) => {
           const colOptions = { ...options, enumValues };
           const acceptsEmptyFields = colsData[colIndex].cellEditorParams?.acceptsEmptyFields ?? false;
           if (!ValidationUtils.isValid(rowCell, colType, colOptions, acceptsEmptyFields)) {
-            errors.push(_forgeTypeError(rowCell, rowIndex, colType, colOptions, colsData, colIndex));
+            errors.push(_forgeTypeError(rowCell, rowIndex + 1, colType, colOptions, colsData, colIndex));
           }
         }
       }
