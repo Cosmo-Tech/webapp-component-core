@@ -1,3 +1,12 @@
+## **1.11.3**&emsp;<sub><sup>2023-05-24 (d8ac2fea...5657e5aa)</sup></sub>
+
+### Bug Fixes
+
+- when parsing CSV files, lines number in error messages now start at 1 instead of 0
+- fix error message in CSV parsing reporting 'missing fields' when there are too many columns ([597a15c](https://github.com/Cosmo-Tech/webapp-component-core/commit/597a15cc411597b060fd035853e41fc39b9132eb))
+- add empty field message and fix too few/many columns to fix all problems encountered ([70c664b](https://github.com/Cosmo-Tech/webapp-component-core/commit/70c664b91850487992e03577c06222f296b20174))
+- fix parsing of Excel files with cells formatted as Date objects ([07a9cbc](https://github.com/Cosmo-Tech/webapp-component-core/commit/07a9cbc0b5ce300f6b9757bfa084d439aaa73e92))
+
 ## **1.11.2** <sub><sup>2023-04-27 (8708e4a...80f0c61)</sup></sub>
 
 - update dependencies
