@@ -10,7 +10,7 @@ export const CUSTOMERS_COLS = [
   {
     field: 'favoriteDrink',
     type: ['enum'],
-    cellEditorParams: { enumValues: ['AppleJuice', 'Beer', 'OrangeJuice', 'Wine'] },
+    enumValues: ['AppleJuice', 'Beer', 'OrangeJuice', 'Wine'],
   },
   { field: 'birthday', type: ['date'], minValue: '1900-01-01', maxValue: new Date().toISOString() },
   { field: 'height', type: ['number'], minValue: 0, maxValue: 2.5 },

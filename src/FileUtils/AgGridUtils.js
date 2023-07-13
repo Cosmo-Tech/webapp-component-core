@@ -77,6 +77,7 @@ const _getColTypeFromTypeArray = (typeArray) => {
 };
 
 const _validateFormat = (rows, hasHeader, cols, options) => {
+  console.log('modified');
   const colsData = cols.map((col) => ({ ...col, type: _getColTypeFromTypeArray(col.type) }));
   const errors = [];
   const knownColsCount = colsData.length;
@@ -90,9 +91,9 @@ const _validateFormat = (rows, hasHeader, cols, options) => {
       if (colIndex < knownColsCount) {
         const colType = colsData[colIndex].type;
         if (colType && rowCell !== undefined) {
-          const enumValues = colsData[colIndex]?.enumValues || colsData[colIndex]?.cellEditorParams?.enumValues;
+          const enumValues = colsData[colIndex]?.enumValues || colsData[colIndex]?.enumValues;
           const colOptions = { ...options, enumValues };
-          const acceptsEmptyFields = colsData[colIndex].cellEditorParams?.acceptsEmptyFields ?? false;
+          const acceptsEmptyFields = colsData[colIndex]?.acceptsEmptyFields ?? false;
           if (!ValidationUtils.isValid(rowCell, colType, colOptions, acceptsEmptyFields)) {
             errors.push(_forgeTypeError(rowCell, rowIndex + 1, colType, colOptions, colsData, colIndex));
           }
@@ -126,7 +127,7 @@ const _calculateEmptyCols = (cols) => {
   if (cols === undefined) {
     return [];
   }
-  return cols.map((_, index) => index).filter((colIndex) => cols[colIndex].cellEditorParams?.acceptsEmptyFields);
+  return cols.map((_, index) => index).filter((colIndex) => cols[colIndex]?.acceptsEmptyFields);
 };
 
 const _processTableToTransformNonAcceptableEmptyCols = (lines, emptyCols) => {
