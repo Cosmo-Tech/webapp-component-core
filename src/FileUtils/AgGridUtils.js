@@ -90,9 +90,12 @@ const _validateFormat = (rows, hasHeader, cols, options) => {
       if (colIndex < knownColsCount) {
         const colType = colsData[colIndex].type;
         if (colType && rowCell !== undefined) {
-          const enumValues = colsData[colIndex]?.enumValues || colsData[colIndex]?.cellEditorParams?.enumValues;
+          // use of cellEditorParams is deprecated
+          const enumValues = colsData[colIndex]?.enumValues ?? colsData[colIndex]?.cellEditorParams?.enumValues;
           const colOptions = { ...options, enumValues };
-          const acceptsEmptyFields = colsData[colIndex].cellEditorParams?.acceptsEmptyFields ?? false;
+          const acceptsEmptyFields =
+            // use of cellEditorParams is deprecated
+            colsData[colIndex].acceptsEmptyFields ?? colsData[colIndex].cellEditorParams?.acceptsEmptyFields ?? false;
           if (!ValidationUtils.isValid(rowCell, colType, colOptions, acceptsEmptyFields)) {
             errors.push(_forgeTypeError(rowCell, rowIndex + 1, colType, colOptions, colsData, colIndex));
           }
@@ -126,7 +129,10 @@ const _calculateEmptyCols = (cols) => {
   if (cols === undefined) {
     return [];
   }
-  return cols.map((_, index) => index).filter((colIndex) => cols[colIndex].cellEditorParams?.acceptsEmptyFields);
+  // use of cellEditorParams is deprecated
+  return cols
+    .map((_, index) => index)
+    .filter((colIndex) => cols[colIndex].acceptsEmptyFields ?? cols[colIndex].cellEditorParams?.acceptsEmptyFields);
 };
 
 const _processTableToTransformNonAcceptableEmptyCols = (lines, emptyCols) => {

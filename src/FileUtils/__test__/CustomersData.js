@@ -10,6 +10,19 @@ export const CUSTOMERS_COLS = [
   {
     field: 'favoriteDrink',
     type: ['enum'],
+    enumValues: ['AppleJuice', 'Beer', 'OrangeJuice', 'Wine'],
+  },
+  { field: 'birthday', type: ['date'], minValue: '1900-01-01', maxValue: new Date().toISOString() },
+  { field: 'height', type: ['number'], minValue: 0, maxValue: 2.5 },
+];
+
+export const CUSTOMERS_COLS_DEPRECATED = [
+  { field: 'name', type: [] },
+  { field: 'age', type: ['int'], minValue: 0, maxValue: 120 },
+  { field: 'canDrinkAlcohol', type: ['bool'] },
+  {
+    field: 'favoriteDrink',
+    type: ['enum'],
     cellEditorParams: { enumValues: ['AppleJuice', 'Beer', 'OrangeJuice', 'Wine'] },
   },
   { field: 'birthday', type: ['date'], minValue: '1900-01-01', maxValue: new Date().toISOString() },

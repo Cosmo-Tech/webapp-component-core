@@ -3,6 +3,7 @@
 
 import {
   CUSTOMERS_COLS,
+  CUSTOMERS_COLS_DEPRECATED,
   SIMPLE_CUSTOMERS_ROWS,
   COMPLEX_CUSTOMERS_ROWS,
   SIMPLE_AGGRID_FORMATTED_ROWS,
@@ -28,8 +29,10 @@ describe('parse valid CSV strings', () => {
     ${true}   | ${undefined}
     ${true}   | ${[]}
     ${true}   | ${CUSTOMERS_COLS}
+    ${true}   | ${CUSTOMERS_COLS_DEPRECATED}
     ${false}  | ${[]}
     ${false}  | ${CUSTOMERS_COLS}
+    ${false}  | ${CUSTOMERS_COLS_DEPRECATED}
   `('empty CSV string with hasHeader="$hasHeader" and cols="$cols"', ({ hasHeader, cols }) => {
     const res = AgGridUtils.fromCSV('', hasHeader, cols, options);
     expect(res.error).toStrictEqual(undefined);
