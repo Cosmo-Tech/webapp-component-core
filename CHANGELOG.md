@@ -1,3 +1,9 @@
+## **1.11.4** <sub><sup>2023-07-26 (a66ef62...5058120)</sup></sub>
+
+### Bug Fixes
+
+- in AgGridUtils, read columns metadata from column object & deprecate usage of cellEditorParams property ([6c05965](https://github.com/Cosmo-Tech/webapp-component-core/commit/6c05965))
+
 ## **1.11.3**&emsp;<sub><sup>2023-05-24 (d8ac2fea...5657e5aa)</sup></sub>
 
 ### Bug Fixes
