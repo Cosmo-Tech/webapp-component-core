@@ -1,3 +1,7 @@
+## **1.11.5** <sub><sup>2023-08-28 (9cb545e...82ffc1f)</sup></sub>
+
+- update dependencies
+
 ## **1.11.4** <sub><sup>2023-07-26 (a66ef62...5058120)</sup></sub>
 
 ### Bug Fixes
