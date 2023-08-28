@@ -1,3 +1,9 @@
+## **1.11.6** <sub><sup>2023-08-28 (a1a83d2...a1a83d2)</sup></sub>
+
+### Bug Fixes
+
+- fix possible date offset in chrome after XLSX import for cells containing dates
+
 ## **1.11.5** <sub><sup>2023-08-28 (9cb545e...82ffc1f)</sup></sub>
 
 - update dependencies
