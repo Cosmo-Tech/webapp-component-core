@@ -2,6 +2,9 @@
 // Licensed under the MIT license.
 
 import {
+  FLAT_ATHLETE_COLS,
+  ATHLETE_COLS_DEPTH_1,
+  ATHLETE_COLS_WITH_NULL_COLUMN_AND_DEPTH_3,
   CUSTOMERS_COLS,
   CUSTOMERS_COLS_DEPRECATED,
   SIMPLE_CUSTOMERS_ROWS,
@@ -21,6 +24,22 @@ import { AgGridUtils } from '..';
 import { Error } from '../../models';
 
 const buildCSVStr = (csvData) => csvData.map((csvRow) => csvRow.join()).join('\n');
+
+describe('flatten arrays of columns & columns groups', () => {
+  test.each`
+    description                     | columns                                      | expected             | warningCount
+    ${'null'}                       | ${null}                                      | ${[]}                | ${1}
+    ${'undefined'}                  | ${undefined}                                 | ${[]}                | ${1}
+    ${'flat array of columns'}      | ${FLAT_ATHLETE_COLS}                         | ${FLAT_ATHLETE_COLS} | ${0}
+    ${'nested arrays of columns'}   | ${ATHLETE_COLS_DEPTH_1}                      | ${FLAT_ATHLETE_COLS} | ${0}
+    ${'nested array with warnings'} | ${ATHLETE_COLS_WITH_NULL_COLUMN_AND_DEPTH_3} | ${FLAT_ATHLETE_COLS} | ${2}
+  `('$description flattened with $warningCount warnings', ({ columns, expected, warningCount }) => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    expect(AgGridUtils.getFlattenColumnsWithoutGroups(columns)).toStrictEqual(expected);
+    expect(warn).toHaveBeenCalledTimes(warningCount);
+    warn.mockReset();
+  });
+});
 
 describe('parse valid CSV strings', () => {
   const options = { dateFormat: 'dd/MM/yyyy' };

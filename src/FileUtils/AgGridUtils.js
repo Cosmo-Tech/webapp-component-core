@@ -6,6 +6,22 @@ import XLSXUtils from './XLSXUtils';
 import { ValidationUtils } from '../ValidationUtils';
 import { Error as PanelError } from '../models';
 
+const getFlattenColumnsWithoutGroups = (columns) => {
+  if (columns == null) {
+    console.warn("Columns list shouldn't be null or undefined");
+    return [];
+  }
+
+  return columns
+    .flatMap((columnOrGroup) => {
+      if (columnOrGroup == null) {
+        console.warn('Null or undefined values found in columns list');
+      }
+      return columnOrGroup?.children ? getFlattenColumnsWithoutGroups(columnOrGroup.children) : columnOrGroup;
+    })
+    .filter((column) => column != null);
+};
+
 const _buildEmptyFieldError = (rowLineNumber, expectedCols, colIndex) => {
   const errorSummary = `Empty field`;
   const errorLoc = `Line ${rowLineNumber}, Column ${colIndex + 1} ("${expectedCols[colIndex].field}")`;
@@ -262,6 +278,7 @@ const fromXLSX = async (fileBlob, hasHeader = true, cols, options) => {
 const AgGridUtils = {
   fromCSV,
   fromXLSX,
+  getFlattenColumnsWithoutGroups,
   toCSV,
   toXLSX,
 };
