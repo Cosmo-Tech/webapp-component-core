@@ -62,16 +62,22 @@ export const ATHLETE_COLS_WITH_NULL_COLUMN_AND_DEPTH_3 = [
 ];
 
 export const CUSTOMERS_COLS = [
-  { field: 'name', type: [] },
-  { field: 'age', type: ['int'], minValue: 0, maxValue: 120 },
-  { field: 'canDrinkAlcohol', type: ['bool'] },
   {
-    field: 'favoriteDrink',
-    type: ['enum'],
-    enumValues: ['AppleJuice', 'Beer', 'OrangeJuice', 'Wine'],
+    headerName: 'identity',
+    children: [
+      { field: 'name', type: [] },
+      { field: 'age', type: ['int'], minValue: 0, maxValue: 120 },
+    ],
   },
-  { field: 'birthday', type: ['date'], minValue: '1900-01-01', maxValue: new Date().toISOString() },
-  { field: 'height', type: ['number'], minValue: 0, maxValue: 2.5 },
+  { field: 'canDrinkAlcohol', type: ['bool'] },
+  { field: 'favoriteDrink', type: ['enum'], enumValues: ['AppleJuice', 'Beer', 'OrangeJuice', 'Wine'] },
+  {
+    headerName: 'identity',
+    children: [
+      { field: 'birthday', type: ['date'], minValue: '1900-01-01', maxValue: new Date().toISOString() },
+      { field: 'height', type: ['number'], minValue: 0, maxValue: 2.5 },
+    ],
+  },
 ];
 
 export const CUSTOMERS_COLS_DEPRECATED = [

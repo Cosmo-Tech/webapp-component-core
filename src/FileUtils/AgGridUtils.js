@@ -168,14 +168,15 @@ const _buildRows = (rows, hasHeader, cols) => {
   return formattedData;
 };
 
-const fromCSV = (dataStr, hasHeader = true, cols, options) => {
-  if (!hasHeader && !cols) {
+const fromCSV = (dataStr, hasHeader = true, nestedCols, options) => {
+  if (!hasHeader && !nestedCols) {
     return { error: [new PanelError('cols must be defined if hasHeader=false', null, null)] };
   }
   if (!dataStr || dataStr.length === 0) {
     return { cols: [], rows: [] };
   }
 
+  let cols = getFlattenColumnsWithoutGroups(nestedCols);
   let rows = [];
   let csvLines;
   const emptyCols = _calculateEmptyCols(cols);
@@ -185,7 +186,7 @@ const fromCSV = (dataStr, hasHeader = true, cols, options) => {
     return { error: [err] };
   }
 
-  if (!cols) {
+  if (!cols || cols.length === 0) {
     cols = _buildCols(csvLines[0]);
   }
 
@@ -210,10 +211,12 @@ const _generateRows = (rows, cols, colSep = ',', rowSep = '\n') => {
   return rows.map((row) => _generateRow(row, cols, colSep)).join(rowSep);
 };
 
-const toCSV = (rows, cols, options) => {
-  if (cols == null || cols.length === 0) {
+const toCSV = (rows, nestedCols, options) => {
+  if (nestedCols == null || nestedCols.length === 0) {
     return { error: [`Cols must be defined`] };
   }
+  const cols = getFlattenColumnsWithoutGroups(nestedCols);
+
   if (!rows) {
     rows = [];
   }
@@ -236,10 +239,11 @@ const toCSV = (rows, cols, options) => {
 
 // TODO: some metadata of cols & options ('acceptsEmptyFields', columns types, dates format, ...) are not used right
 // now, but they could be used in a future version to improve the format of the exported Excel file
-const toXLSX = (rows, cols, options) => {
+const toXLSX = (rows, nestedCols, options) => {
   if (!rows) {
     rows = [];
   }
+  const cols = getFlattenColumnsWithoutGroups(nestedCols);
 
   options = {
     ...DEFAULT_XLSX_EXPORT_OPTIONS,
@@ -249,14 +253,15 @@ const toXLSX = (rows, cols, options) => {
   return XLSXUtils.write(rows, header);
 };
 
-const fromXLSX = async (fileBlob, hasHeader = true, cols, options) => {
-  if (!hasHeader && !cols) {
+const fromXLSX = async (fileBlob, hasHeader = true, nestedCols, options) => {
+  if (!hasHeader && !nestedCols) {
     return { error: [new PanelError('cols must be defined if hasHeader=false', null, null)] };
   }
   if (!fileBlob) {
     return { cols: [], rows: [] };
   }
 
+  let cols = getFlattenColumnsWithoutGroups(nestedCols);
   let rows = [];
   let xlsxLines;
   const emptyCols = _calculateEmptyCols(cols);
@@ -266,7 +271,7 @@ const fromXLSX = async (fileBlob, hasHeader = true, cols, options) => {
   } catch (err) {
     return { error: [new PanelError(err?.message || err, fileBlob.name, err?.stack || null)] };
   }
-  if (!cols) {
+  if (!cols || cols.length === 0) {
     cols = _buildCols(xlsxLines[0]);
   }
   const errors = _validateFormat(xlsxLines, hasHeader, cols, options);
