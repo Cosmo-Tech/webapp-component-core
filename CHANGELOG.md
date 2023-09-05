@@ -1,3 +1,13 @@
+## **1.12.0** <sub><sup>2023-09-05 (e96188d...05e2b63)</sup></sub>
+
+### Features
+
+- add new function getFlattenColumnsWithoutGroups ([e96188d](https://github.com/Cosmo-Tech/webapp-component-core/commit/e96188d))
+
+### Bug Fixes
+
+- fix import & export of CSV/XLSX files when some columns are grouped ([193ac62](https://github.com/Cosmo-Tech/webapp-component-core/commit/193ac62))
+
 ## **1.11.6** <sub><sup>2023-08-28 (a1a83d2...a1a83d2)</sup></sub>
 
 ### Bug Fixes
