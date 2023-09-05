@@ -2,6 +2,9 @@
 // Licensed under the MIT license.
 
 import {
+  FLAT_ATHLETE_COLS,
+  ATHLETE_COLS_DEPTH_1,
+  ATHLETE_COLS_WITH_NULL_COLUMN_AND_DEPTH_3,
   CUSTOMERS_COLS,
   CUSTOMERS_COLS_DEPRECATED,
   SIMPLE_CUSTOMERS_ROWS,
@@ -22,7 +25,24 @@ import { Error } from '../../models';
 
 const buildCSVStr = (csvData) => csvData.map((csvRow) => csvRow.join()).join('\n');
 
+describe('flatten arrays of columns & columns groups', () => {
+  test.each`
+    description                     | columns                                      | expected             | warningCount
+    ${'null'}                       | ${null}                                      | ${[]}                | ${1}
+    ${'undefined'}                  | ${undefined}                                 | ${[]}                | ${1}
+    ${'flat array of columns'}      | ${FLAT_ATHLETE_COLS}                         | ${FLAT_ATHLETE_COLS} | ${0}
+    ${'nested arrays of columns'}   | ${ATHLETE_COLS_DEPTH_1}                      | ${FLAT_ATHLETE_COLS} | ${0}
+    ${'nested array with warnings'} | ${ATHLETE_COLS_WITH_NULL_COLUMN_AND_DEPTH_3} | ${FLAT_ATHLETE_COLS} | ${2}
+  `('$description flattened with $warningCount warnings', ({ columns, expected, warningCount }) => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    expect(AgGridUtils.getFlattenColumnsWithoutGroups(columns)).toStrictEqual(expected);
+    expect(warn).toHaveBeenCalledTimes(warningCount);
+    warn.mockReset();
+  });
+});
+
 describe('parse valid CSV strings', () => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
   const options = { dateFormat: 'dd/MM/yyyy' };
   test.each`
     hasHeader | cols
@@ -38,25 +58,25 @@ describe('parse valid CSV strings', () => {
     expect(res.error).toStrictEqual(undefined);
     expect(res.cols).toStrictEqual([]);
     expect(res.rows).toStrictEqual([]);
+    warn.mockReset();
   });
 
-  const headerCols = CUSTOMERS_COLS.map((col) => col.field);
+  const flattenCols = AgGridUtils.getFlattenColumnsWithoutGroups(CUSTOMERS_COLS);
+  const headerCols = flattenCols.map((col) => col.field);
   const csvData = [headerCols].concat(COMPLEX_CUSTOMERS_ROWS);
   const headerOnlyStr = headerCols.join();
   const csvWithHeaderStr = buildCSVStr(csvData);
   const csvWithoutHeaderStr = buildCSVStr(COMPLEX_CUSTOMERS_ROWS);
-  const generatedCols = CUSTOMERS_COLS.map((col) => {
-    return { field: col.field };
-  });
+  const generatedCols = flattenCols.map((col) => ({ field: col.field }));
 
   test.each`
     dataStr                | hasHeader | cols              | expectedRows                        | expectedCols
     ${headerOnlyStr}       | ${true}   | ${undefined}      | ${[]}                               | ${generatedCols}
-    ${headerOnlyStr}       | ${true}   | ${CUSTOMERS_COLS} | ${[]}                               | ${CUSTOMERS_COLS}
+    ${headerOnlyStr}       | ${true}   | ${CUSTOMERS_COLS} | ${[]}                               | ${flattenCols}
     ${csvWithHeaderStr}    | ${true}   | ${undefined}      | ${UNCHANGED_AGGRID_FORMATTED_ROWS2} | ${generatedCols}
-    ${csvWithHeaderStr}    | ${true}   | ${CUSTOMERS_COLS} | ${COMPLEX_AGGRID_FORMATTED_ROWS}    | ${CUSTOMERS_COLS}
-    ${csvWithoutHeaderStr} | ${false}  | ${CUSTOMERS_COLS} | ${COMPLEX_AGGRID_FORMATTED_ROWS}    | ${CUSTOMERS_COLS}
-  `('with hasHeader="$hasHeader" and cols="$cols"', ({ dataStr, hasHeader, cols, expectedRows, expectedCols }) => {
+    ${csvWithHeaderStr}    | ${true}   | ${CUSTOMERS_COLS} | ${COMPLEX_AGGRID_FORMATTED_ROWS}    | ${flattenCols}
+    ${csvWithoutHeaderStr} | ${false}  | ${CUSTOMERS_COLS} | ${COMPLEX_AGGRID_FORMATTED_ROWS}    | ${flattenCols}
+  `('$#: with hasHeader="$hasHeader" and cols="$cols"', ({ dataStr, hasHeader, cols, expectedRows, expectedCols }) => {
     const res = AgGridUtils.fromCSV(dataStr, hasHeader, cols, options);
     expect(res.error).toStrictEqual(undefined);
     expect(res.cols).toStrictEqual(expectedCols);
@@ -73,7 +93,7 @@ describe('parse with invalid parameters', () => {
 
 describe('parse invalid CSV strings', () => {
   const options = { dateFormat: 'dd/MM/yyyy' };
-  const headerCols = CUSTOMERS_COLS.map((col) => col.field);
+  const headerCols = AgGridUtils.getFlattenColumnsWithoutGroups(CUSTOMERS_COLS).map((col) => col.field);
   const csvData = [headerCols].concat(INVALID_CUSTOMERS_ROWS);
   const csvWithHeaderStr = buildCSVStr(csvData);
   const csvWithoutHeaderStr = buildCSVStr(INVALID_CUSTOMERS_ROWS);
@@ -101,7 +121,7 @@ describe('export to CSV string', () => {
     rowSep: '\n\n',
   };
 
-  const headerCols = CUSTOMERS_COLS.map((col) => col.field);
+  const headerCols = AgGridUtils.getFlattenColumnsWithoutGroups(CUSTOMERS_COLS).map((col) => col.field);
   const csvHeaderStr = headerCols.join();
   const csvData = [headerCols].concat(SIMPLE_CUSTOMERS_ROWS);
   const csvWithHeaderStr = buildCSVStr(csvData);

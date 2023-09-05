@@ -3,17 +3,81 @@
 
 import { Error } from '../../models';
 
-export const CUSTOMERS_COLS = [
-  { field: 'name', type: [] },
-  { field: 'age', type: ['int'], minValue: 0, maxValue: 120 },
-  { field: 'canDrinkAlcohol', type: ['bool'] },
+export const FLAT_ATHLETE_COLS = [
+  { field: 'athlete', params: ['params1', 'params2', 'params3'] },
+  { field: 'age' },
+  { field: 'country' },
+  { field: 'sport' },
+  { field: 'total', columnGroupShow: 'closed' },
+  { field: 'gold', columnGroupShow: 'open' },
+  { field: 'silver', columnGroupShow: 'open' },
+  { field: 'bronze', columnGroupShow: 'open' },
+];
+
+export const ATHLETE_COLS_DEPTH_1 = [
   {
-    field: 'favoriteDrink',
-    type: ['enum'],
-    enumValues: ['AppleJuice', 'Beer', 'OrangeJuice', 'Wine'],
+    headerName: 'Athlete Details',
+    children: [{ field: 'athlete', params: ['params1', 'params2', 'params3'] }, { field: 'age' }, { field: 'country' }],
   },
-  { field: 'birthday', type: ['date'], minValue: '1900-01-01', maxValue: new Date().toISOString() },
-  { field: 'height', type: ['number'], minValue: 0, maxValue: 2.5 },
+  {
+    headerName: 'Sports Results',
+    children: [
+      { field: 'sport' },
+      { field: 'total', columnGroupShow: 'closed' },
+      { field: 'gold', columnGroupShow: 'open' },
+      { field: 'silver', columnGroupShow: 'open' },
+      { field: 'bronze', columnGroupShow: 'open' },
+    ],
+  },
+];
+
+export const ATHLETE_COLS_WITH_NULL_COLUMN_AND_DEPTH_3 = [
+  {
+    headerName: 'Athlete Details',
+    children: [{ field: 'athlete', params: ['params1', 'params2', 'params3'] }, { field: 'age' }, { field: 'country' }],
+  },
+  {
+    headerName: 'Sports Results',
+    children: [
+      {
+        headerName: 'Result',
+        children: [
+          {
+            headerName: 'Sport',
+            children: [{ field: 'sport' }, undefined],
+          },
+        ],
+      },
+      {
+        headerName: 'Void Group',
+        children: [],
+      },
+      { field: 'total', columnGroupShow: 'closed' },
+      { field: 'gold', columnGroupShow: 'open' },
+      { field: 'silver', columnGroupShow: 'open' },
+      { field: 'bronze', columnGroupShow: 'open' },
+      null,
+    ],
+  },
+];
+
+export const CUSTOMERS_COLS = [
+  {
+    headerName: 'identity',
+    children: [
+      { field: 'name', type: [] },
+      { field: 'age', type: ['int'], minValue: 0, maxValue: 120 },
+    ],
+  },
+  { field: 'canDrinkAlcohol', type: ['bool'] },
+  { field: 'favoriteDrink', type: ['enum'], enumValues: ['AppleJuice', 'Beer', 'OrangeJuice', 'Wine'] },
+  {
+    headerName: 'identity',
+    children: [
+      { field: 'birthday', type: ['date'], minValue: '1900-01-01', maxValue: new Date().toISOString() },
+      { field: 'height', type: ['number'], minValue: 0, maxValue: 2.5 },
+    ],
+  },
 ];
 
 export const CUSTOMERS_COLS_DEPRECATED = [
