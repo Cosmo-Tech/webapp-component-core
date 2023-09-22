@@ -1,3 +1,9 @@
+## **1.13.0** <sub><sup>2023-09-22 (9dd046f...45122b9)</sup></sub>
+
+### Features
+
+- add utils functions for dates and timezones ([f784395](https://github.com/Cosmo-Tech/webapp-component-core/commit/f784395))
+
 ## **1.12.0** <sub><sup>2023-09-05 (e96188d...05e2b63)</sup></sub>
 
 ### Features
