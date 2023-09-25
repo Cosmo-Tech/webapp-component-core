@@ -29,9 +29,16 @@ const getExtensionFromFileName = (fileName) => {
   return extension;
 };
 
+const isExtensionInFileTypeFilter = (extension, fileTypeFilter) => {
+  if (typeof extension !== 'string' || typeof fileTypeFilter !== 'string') return false;
+  const fileTypes = fileTypeFilter.split(',').map((fileType) => fileType.replace('.', '').trim());
+  return fileTypes.includes(extension);
+};
+
 const PathUtils = {
   getBaseNameFromFileName,
   getExtensionFromFileName,
+  isExtensionInFileTypeFilter,
 };
 
 export default PathUtils;
