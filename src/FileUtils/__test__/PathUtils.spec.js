@@ -24,6 +24,11 @@ describe('getBaseNameFromFileName', () => {
 describe('getExtensionFromFileName', () => {
   test.each`
     fileName         | expectedResult
+    ${undefined}     | ${''}
+    ${null}          | ${''}
+    ${[]}            | ${''}
+    ${['foo']}       | ${''}
+    ${{}}            | ${''}
     ${''}            | ${''}
     ${'.htaccess'}   | ${''}
     ${'.'}           | ${''}

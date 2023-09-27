@@ -16,7 +16,7 @@ const getBaseNameFromFileName = (fileName) => {
 };
 
 const getExtensionFromFileName = (fileName) => {
-  if (fileName.indexOf('.') === -1) {
+  if (typeof fileName !== 'string' || fileName.indexOf('.') === -1) {
     return '';
   }
 
