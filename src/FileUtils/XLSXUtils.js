@@ -13,7 +13,7 @@ const _castCellValueToStr = (cellValue) => {
 
 const _dateCellsToString = (cols, data, hasHeader, dateFormat) => {
   cols.forEach((column, i) => {
-    if (column.type.includes('date')) {
+    if (column?.type?.includes('date')) {
       for (let j = 0 + hasHeader; j < data.length; j++) {
         const dateCell = data[j][i];
         if (dateCell instanceof Date) {
