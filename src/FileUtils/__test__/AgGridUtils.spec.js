@@ -140,3 +140,77 @@ describe('export to CSV string', () => {
     expect(res).toStrictEqual(expectedOutput);
   });
 });
+
+describe('force all columns to have a headerName', () => {
+  const columns = [{ field: 'field' }];
+  const columnsWithSomeHeaderNames = [
+    { field: 'firstField' },
+    { field: 'secondField' },
+    { field: 'thirdField', headerName: 'Third field ' },
+  ];
+  const columnsWithGroups = [
+    { field: 'firstField' },
+    { headerName: 'firstGroup', children: [{ field: 'secondField' }, { field: 'thirdField' }] },
+    {
+      headerName: 'firstGroup',
+      children: [
+        { field: 'secondField' },
+        { headerName: 'secondGroup', children: [{ field: 'fourthField' }, { field: 'fifthField' }] },
+      ],
+    },
+    { field: 'sixthField', headerName: 'sixthField' },
+  ];
+  const columnsWithGroupsWithHeaders = [
+    { field: 'firstField', headerName: 'firstField' },
+    {
+      headerName: 'firstGroup',
+      children: [
+        { field: 'secondField', headerName: 'secondField' },
+        { field: 'thirdField', headerName: 'thirdField' },
+      ],
+    },
+    {
+      headerName: 'firstGroup',
+      children: [
+        { field: 'secondField', headerName: 'secondField' },
+        {
+          headerName: 'secondGroup',
+          children: [
+            { field: 'fourthField', headerName: 'fourthField' },
+            { field: 'fifthField', headerName: 'fifthField' },
+          ],
+        },
+      ],
+    },
+    { field: 'sixthField', headerName: 'sixthField' },
+  ];
+
+  const columnsWithHeaderNames = [
+    { field: 'field', headerName: 'First field' },
+    { field: 'secondField', headerName: 'Second field' },
+  ];
+  test.each`
+    columns      | result
+    ${[]}        | ${[]}
+    ${{}}        | ${[]}
+    ${null}      | ${[]}
+    ${undefined} | ${[]}
+    ${''}        | ${[]}
+  `('empty array is returned if columns list is invalid', ({ columns, result }) => {
+    expect(AgGridUtils.getColumnsWithHeaderName(columns)).toStrictEqual(result);
+  });
+  test('every column has a headerName', () => {
+    AgGridUtils.getColumnsWithHeaderName(columns).forEach((col) => expect(col.headerName).toStrictEqual(col.field));
+    AgGridUtils.getColumnsWithHeaderName(columnsWithSomeHeaderNames).forEach((col) =>
+      expect(col).toHaveProperty('headerName')
+    );
+  });
+  test('every column has a header name with columnGroups', () => {
+    expect(AgGridUtils.getColumnsWithHeaderName(columnsWithGroups)).toStrictEqual(columnsWithGroupsWithHeaders);
+  });
+  test('headerNames not overridden if provided', () => {
+    AgGridUtils.getColumnsWithHeaderName(columnsWithHeaderNames).forEach((col) =>
+      expect(col.headerName).not.toStrictEqual(col.field)
+    );
+  });
+});

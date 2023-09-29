@@ -22,6 +22,20 @@ const getFlattenColumnsWithoutGroups = (columns) => {
     .filter((column) => column != null);
 };
 
+const getColumnsWithHeaderName = (columns) => {
+  if (!Array.isArray(columns)) {
+    console.warn('Columns list must be an array');
+    return [];
+  }
+  columns.forEach((columnOrGroup) => {
+    if (columnOrGroup?.children) getColumnsWithHeaderName(columnOrGroup.children);
+    else {
+      if (columnOrGroup.headerName === undefined) columnOrGroup.headerName = columnOrGroup.field;
+    }
+  });
+  return columns;
+};
+
 const _buildEmptyFieldError = (rowLineNumber, expectedCols, colIndex) => {
   const errorSummary = `Empty field`;
   const errorLoc = `Line ${rowLineNumber}, Column ${colIndex + 1} ("${expectedCols[colIndex].field}")`;
@@ -284,6 +298,7 @@ const AgGridUtils = {
   fromCSV,
   fromXLSX,
   getFlattenColumnsWithoutGroups,
+  getColumnsWithHeaderName,
   toCSV,
   toXLSX,
 };
