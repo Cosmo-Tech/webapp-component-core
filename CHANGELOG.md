@@ -1,3 +1,15 @@
+## **1.14.0**&emsp;<sub><sup>2023-09-29 (bbcde1f419e4df5189974e7e9f0bbdb50c29f34d...07ada074524a18d23c39792b735590832414324e)</sup></sub>
+
+### Features
+* add isExtensionInFileTypeFilter function ([bbcde1f](https://github.com/Cosmo-Tech/webapp-component-core/commit/bbcde1f419e4df5189974e7e9f0bbdb50c29f34d))
+* add a function to assign headerName to all columns ([6dff900](https://github.com/Cosmo-Tech/webapp-component-core/commit/6dff900755e3900e03145ca8ae3b1d7edb0d434b))
+
+### Bug Fixes
+* fix error thrown by getExtensionFromFileName when input is not a string ([ad604df](https://github.com/Cosmo-Tech/webapp-component-core/commit/ad604df1facb1155ccc51aac1edadaf71721f779))
+* fix Excel file parsing when columns don't have types defined ([4037f68](https://github.com/Cosmo-Tech/webapp-component-core/commit/4037f689e81d0a5e9719feb500445729fa904064))
+
+<br>
+
 ## **1.13.0** <sub><sup>2023-09-22 (9dd046f...45122b9)</sup></sub>
 
 ### Features
