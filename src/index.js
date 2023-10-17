@@ -9,3 +9,4 @@ export { DateUtils } from './DateUtils';
 export { default as ScenarioUtils } from './ScenarioUtils';
 export { ValidationUtils } from './ValidationUtils';
 export { Error } from './models';
+export { ResourceUtils } from './ResourceUtils';
