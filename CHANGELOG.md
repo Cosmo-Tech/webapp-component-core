@@ -1,3 +1,9 @@
+## **1.15.0** <sub><sup>2023-10-26 (c41f4a6...e39934b)</sup></sub>
+
+### Features
+
+- add sorting function for lists of resources \(e\.g\. scenarios or datasets\) ([ab6d2e7](https://github.com/Cosmo-Tech/webapp-component-core/commit/ab6d2e7))
+
 ## **1.14.1** <sub><sup>2023-10-06 (2571879...4bc5cc3)</sup></sub>
 
 - update dependencies
