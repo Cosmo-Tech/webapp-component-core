@@ -11,6 +11,7 @@
   },
   "plugins": ["prettier", "jest"],
   "rules": {
+    "no-constant-binary-expression": "error",
     "semi": [2, "always"],
     "max-len": ["error", { "code": 120 }],
     "jest/no-disabled-tests": "warn",
