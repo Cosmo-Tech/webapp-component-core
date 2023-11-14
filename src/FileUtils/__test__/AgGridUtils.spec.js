@@ -1,6 +1,7 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
-
+import { AgGridUtils } from '..';
+import { Error } from '../../models';
 import {
   FLAT_ATHLETE_COLS,
   ATHLETE_COLS_DEPTH_1,
@@ -20,8 +21,6 @@ import {
   EXPECTED_CSV_OUTPUT_WITH_DELIMITERS,
   SIMPLE_AGGRID_FORMATTED_ROWS_WITH_DELIMITERS,
 } from './CustomersData';
-import { AgGridUtils } from '..';
-import { Error } from '../../models';
 
 const buildCSVStr = (csvData) => csvData.map((csvRow) => csvRow.join()).join('\n');
 

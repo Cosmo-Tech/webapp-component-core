@@ -1,6 +1,5 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
-
 import { Error } from '../../models';
 
 export const FLAT_ATHLETE_COLS = [

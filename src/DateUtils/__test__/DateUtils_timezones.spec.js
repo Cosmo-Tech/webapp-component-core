@@ -1,7 +1,7 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
-
 import { DateUtils } from '..';
+
 const timezoneMock = require('timezone-mock');
 
 // Note: jest has been configured to use GMT timezone (cf jest.config.js in the project root folder)

@@ -1,6 +1,5 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
-
 import validator from 'validator';
 import { DateUtils } from '../DateUtils';
 

@@ -1,6 +1,5 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
-
 import rfdc from 'rfdc';
 
 const clone = rfdc();

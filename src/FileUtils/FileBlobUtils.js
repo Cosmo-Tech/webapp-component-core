@@ -1,6 +1,5 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
-
 import fileDownload from 'js-file-download';
 
 function downloadFileFromData(fileData, fileName) {
