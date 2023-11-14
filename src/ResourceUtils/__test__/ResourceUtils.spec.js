@@ -1,6 +1,6 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
-
+import ResourceUtils from '../ResourceUtils';
 import {
   resourceList,
   expectedResourceTree,
@@ -10,7 +10,6 @@ import {
   listOfOneResource,
   expectedResourceTreeOfOneResource,
 } from './ResourceListData';
-import ResourceUtils from '../ResourceUtils';
 
 describe('sort resourceList alphabetically', () => {
   test('sort resource list in alphabetical order', () => {

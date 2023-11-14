@@ -1,6 +1,5 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
-
 import * as XLSX from 'xlsx';
 import { DateUtils } from '../DateUtils';
 

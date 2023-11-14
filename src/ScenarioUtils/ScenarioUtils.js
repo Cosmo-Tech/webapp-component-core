@@ -1,6 +1,5 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
-
 import { NAME_VALIDATOR } from './constants';
 
 const scenarioExistsInList = (scenarioName, scenarioList) => {

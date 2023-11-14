@@ -1,10 +1,9 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
-
-import CSV from './CSVUtils';
-import XLSXUtils from './XLSXUtils';
 import { ValidationUtils } from '../ValidationUtils';
 import { Error as PanelError } from '../models';
+import CSV from './CSVUtils';
+import XLSXUtils from './XLSXUtils';
 
 const getFlattenColumnsWithoutGroups = (columns) => {
   if (columns == null) {
