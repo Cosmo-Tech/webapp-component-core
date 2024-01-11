@@ -56,7 +56,7 @@ const _buildNumberColumnsError = (rowLineNumber, expectedCols, row) => {
 
 const _buildTypeError = (type, rowLineNumber, colIndex, colsData, value, expected) => {
   const errorSummary = `Incorrect ${type} value`;
-  const errorLoc = `Line ${rowLineNumber} , Column ${colIndex + 1} ("${colsData[colIndex].field}")`;
+  const errorLoc = `Line ${rowLineNumber}, Column ${colIndex + 1} ("${colsData[colIndex].field}")`;
   const errorContext = `${errorSummary} (${errorLoc})\n` + `Incorrect value : "${value}" for type ${type}`;
   if (!expected || expected.length === 0) {
     return new PanelError(errorSummary, errorLoc, errorContext);

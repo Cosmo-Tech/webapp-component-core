@@ -4,10 +4,8 @@ import * as XLSX from 'xlsx';
 import { DateUtils } from '../DateUtils';
 
 const _castCellValueToStr = (cellValue) => {
-  if (cellValue === null || cellValue === undefined) {
-    return '';
-  }
-  return '' + cellValue;
+  if (cellValue == null) return '';
+  return String(cellValue).trim();
 };
 
 const _dateCellsToString = (cols, data, hasHeader, dateFormat) => {
