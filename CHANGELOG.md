@@ -1,11 +1,9 @@
-## **1.15.1**&emsp;<sub><sup>2024-01-11 (93d6f7cbafa3dcd4064a49ec7f85ec64984405da...dba7f30759195e5f30ec317027eeea48d88ce17e)</sup></sub>
+## **1.16.0**&emsp;<sub><sup>2024-01-11 (93d6f7cbafa3dcd4064a49ec7f85ec64984405da...dba7f30759195e5f30ec317027eeea48d88ce17e)</sup></sub>
 
 ### Bug Fixes
 
-- fix unexpected unempty value when field is filled with multispaces ([867c3a6](https://github.com/Cosmo-Tech/webapp-component-core/commit/867c3a6f26e344a68c1ee0940254731e1a2e45fe))
-- fix useless spaces in some table parameters error message ([405797d](https://github.com/Cosmo-Tech/webapp-component-core/commit/405797d0742845b645b3eb462e1d16ce9d5be7b5))
-
-<br>
+- trim spaces in cells when parsing XLSX files ([867c3a6](https://github.com/Cosmo-Tech/webapp-component-core/commit/867c3a6f26e344a68c1ee0940254731e1a2e45fe))
+- fix formatting of Table error messages ([405797d](https://github.com/Cosmo-Tech/webapp-component-core/commit/405797d0742845b645b3eb462e1d16ce9d5be7b5))
 
 ## **1.15.0** <sub><sup>2023-10-26 (c41f4a6...e39934b)</sup></sub>
 
