@@ -5277,6 +5277,10 @@ write-file-atomic@^4.0.2:
   version "0.20.1"
   resolved "https://cdn.sheetjs.com/xlsx-0.20.1/xlsx-0.20.1.tgz#8980af12ddad223649a6d99ccb712443d3008ca4"
 
+"xlsx@https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz":
+  version "0.20.2"
+  resolved "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz#0f64eeed3f1a46e64724620c3553f2dbd3cd2d7d"
+
 y18n@^5.0.5:
   version "5.0.8"
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.8.tgz#7f4934d0f7ca8c56f95314939ddcd2dd91ce1d55"
