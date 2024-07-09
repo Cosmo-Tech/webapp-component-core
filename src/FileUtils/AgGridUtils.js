@@ -293,6 +293,12 @@ const fromXLSX = async (fileBlob, hasHeader = true, nestedCols, options) => {
   return { cols, rows };
 };
 
+const dictToCsv = (header, rows) => {
+  return [header.join(','), ...rows.map((row) => header.map((field) => JSON.stringify(row[field])).join(','))].join(
+    '\n'
+  );
+};
+
 const AgGridUtils = {
   fromCSV,
   fromXLSX,
@@ -300,6 +306,7 @@ const AgGridUtils = {
   getColumnsWithHeaderName,
   toCSV,
   toXLSX,
+  dictToCsv,
 };
 
 export default AgGridUtils;
