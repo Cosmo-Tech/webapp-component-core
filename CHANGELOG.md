@@ -1,3 +1,7 @@
+## **1.16.1** <sub><sup>2024-07-15 (e29781c...222154e)</sup></sub>
+
+- update dependencies
+
 ## **1.16.0**&emsp;<sub><sup>2024-01-11 (93d6f7cbafa3dcd4064a49ec7f85ec64984405da...dba7f30759195e5f30ec317027eeea48d88ce17e)</sup></sub>
 
 ### Bug Fixes
