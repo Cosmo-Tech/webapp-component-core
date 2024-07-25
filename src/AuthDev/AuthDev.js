@@ -12,8 +12,8 @@ function setDefaultUser() {
   authData = {
     authenticated: true,
     accountId: 'xxxxxxxx-xxxx-dave-xxxx-xxxxxxxxxxxx',
-    userEmail: 'dev.sample.webapp@example.com',
-    userId: 'xxxxxxxx-xxxx-dave-xxxx-xxxxxxxxxxxx',
+    userEmail: '931b8189-2157-4102-9fee-3bc06a46d3a8',
+    userId: '931b8189-2157-4102-9fee-3bc06a46d3a8',
     userName: 'Dave Lauper',
     roles: ['Organization.User'],
   };
@@ -21,6 +21,7 @@ function setDefaultUser() {
 
 function signIn() {
   setDefaultUser();
+  console.log('setting default user');
   window.location.href = '/';
 }
 

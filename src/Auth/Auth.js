@@ -122,6 +122,7 @@ function isUserSignedIn(callback) {
 }
 
 function getUserEmail() {
+  console.log('testing core');
   if (currentProvider === undefined) {
     return undefined;
   }
