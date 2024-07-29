@@ -1,6 +1,6 @@
 {
   "name": "@cosmotech/core",
-  "version": "1.16.1",
+  "version": "1.17.0",
   "description": "",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
