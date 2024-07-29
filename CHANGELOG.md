@@ -1,3 +1,9 @@
+## **1.17.0** <sub><sup>2024-07-29 (05224df...05224df)</sup></sub>
+
+### Features
+
+- add setConfig method to AuthDev module ([05224df](https://github.com/Cosmo-Tech/webapp-component-core/commit/05224df))
+
 ## **1.16.1** <sub><sup>2024-07-15 (e29781c...222154e)</sup></sub>
 
 - update dependencies
