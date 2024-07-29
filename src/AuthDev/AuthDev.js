@@ -8,15 +8,26 @@ function readFromStorage(key) {
 const name = 'auth-dev';
 let authData = null;
 
-function setDefaultUser() {
+const DEFAULT_AUTH_DATA = {
+  authenticated: true,
+  accountId: 'xxxxxxxx-xxxx-dave-xxxx-xxxxxxxxxxxx',
+  userEmail: 'dev.sample.webapp@example.com',
+  userId: 'xxxxxxxx-xxxx-dave-xxxx-xxxxxxxxxxxx',
+  userName: 'Dave Lauper',
+  roles: ['Organization.User'],
+};
+
+// Optional configuration method to overwrite default values such as accountId, userEmail, userId, userName and roles
+function setConfig(authDataPatch) {
   authData = {
-    authenticated: true,
-    accountId: 'xxxxxxxx-xxxx-dave-xxxx-xxxxxxxxxxxx',
-    userEmail: 'dev.sample.webapp@example.com',
-    userId: 'xxxxxxxx-xxxx-dave-xxxx-xxxxxxxxxxxx',
-    userName: 'Dave Lauper',
-    roles: ['Organization.User'],
+    ...DEFAULT_AUTH_DATA,
+    ...authDataPatch,
   };
+}
+
+function setDefaultUser() {
+  if (authData != null) return;
+  authData = DEFAULT_AUTH_DATA;
 }
 
 function signIn() {
@@ -82,6 +93,7 @@ const AuthDev = {
   getUserId,
   getUserPicUrl,
   isAsync,
+  setConfig,
   acquireTokens,
   acquireTokensByRequest,
 };
