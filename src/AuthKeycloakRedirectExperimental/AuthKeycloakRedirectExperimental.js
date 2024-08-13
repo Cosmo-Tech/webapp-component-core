@@ -16,7 +16,7 @@ const clearFromStorage = (key) => {
   localStorage.removeItem(key);
 };
 
-export const name = 'auth-keycloakExperimental';
+export const name = 'auth-keycloakRedirectExperimental';
 const authData = {
   authenticated: readFromStorage('authAuthenticated') === 'true',
   accountId: undefined,
@@ -32,13 +32,17 @@ export const setConfig = async (newConfig) => {
   config = newConfig;
   msalApp = new msal.PublicClientApplication(config.msalConfig);
   await msalApp.initialize();
+  //
+  // if (await isUserSignedIn()) {
+  //   console.log('already signed in!');
+  // }
 };
 
 const checkInit = () => {
   if (msalApp === null) {
     console.error(
       'AuthMSAL module has not been initialized. Make sure you ' +
-        'call the setConfig const when =  you add the AuthMSAL provider.=> aa'
+        'call the setConfig const when =  you add the AuthMSAL provider.'
     );
     return false;
   }
@@ -71,9 +75,9 @@ const _acquireTokensByRequestAndAccount = async (tokenReq, account) => {
         return;
       } else if (silentTokenFetchError.errorMessage?.indexOf('interaction_required') !== -1) {
         msalApp
-          .acquireTokenPopup(tokenReq)
+          .acquireTokenRedirect(tokenReq)
           .then((tokenRes) => tokenRes) // Token acquired with interaction
-          .catch((popupTokenFetchError) => popupTokenFetchError); // Token retrieval failed
+          .catch((tokenRedirectError) => tokenRedirectError); // Token retrieval failed
       }
       throw silentTokenFetchError;
     });
@@ -105,73 +109,46 @@ export const acquireTokensByRequest = async (tokenReq) => {
   return await _acquireTokensByRequestAndAccount(tokenReq, account);
 };
 
-const selectAccount = () => {
-  if (!checkInit()) return;
-
-  const accounts = msalApp.getAllAccounts();
-  if (accounts.length === 0) {
-    return;
-  }
-  // Select the 1st account if more than one is detected
-  if (accounts.length > 1) {
-    console.warn('Several accounts detected, using the first one by default.');
-  }
-  authData.authenticated = true;
-  const account = accounts[0];
-  authData.accountId = account.homeAccountId;
-  authData.userEmail = account.username; // In MSAL account data, username property contains user email
-  authData.username = account.name;
-  authData.userId = account.localAccountId;
-  redirectOnAuthSuccess();
-};
-
 const handleResponse = (response) => {
-  if (response == null) {
-    selectAccount();
+  if (response !== null) {
+    const accountId = response.account.homeAccountId;
+    writeToStorage('authIdTokenPopup', response.idToken);
+    writeToStorage('authIdToken', response.idToken);
+    writeToStorage('authAccessToken', response.accessToken);
+    writeToStorage('authAuthenticated', 'true');
+    authData.authenticated = true;
+    const account = response.account;
+    authData.accountId = account.homeAccountId;
+    authData.userEmail = account.username; // In MSAL account data, username property contains user email
+    authData.username = account.name;
+    authData.userId = account.localAccountId;
+    redirectOnAuthSuccess();
     return;
   }
 
-  writeToStorage('authIdTokenPopup', response.idToken);
-  writeToStorage('authIdToken', response.idToken);
-  writeToStorage('authAccessToken', response.accessToken);
-  writeToStorage('authAuthenticated', 'true');
+  // In case multiple accounts exist, you can select
+  const currentAccounts = msalApp.getAllAccounts();
 
-  authData.authenticated = true;
-  const account = response.account;
-  authData.accountId = account.homeAccountId;
-  authData.userEmail = account.username; // In MSAL account data, username property contains user email
-  authData.username = account.name;
-  authData.userId = account.localAccountId;
-  redirectOnAuthSuccess();
+  if (currentAccounts.length === 0) {
+    // no accounts signed-in, attempt to sign a user in
+    msalApp.loginRedirect(config.loginRequest);
+  } else if (currentAccounts.length > 1) {
+    // Add choose account code here
+  } else if (currentAccounts.length === 1) {
+    const accountId = currentAccounts[0].homeAccountId;
+  }
 };
 
-export const signIn = () => {
+export const signIn = async () => {
   if (!checkInit()) return;
 
   // Force removal of MSAL interaction status if it exists in session storage (it happens sometimes after logout)
-  const itemKey = 'msal.interaction.status';
-  if (sessionStorage.getItem(itemKey)) {
-    sessionStorage.removeItem(itemKey);
-  }
+  // const itemKey = 'msal.interaction.status';
+  // if (sessionStorage.getItem(itemKey)) {
+  //   sessionStorage.removeItem(itemKey);
+  // }
 
-  return msalApp
-    .loginPopup(config.loginRequest)
-    .then(handleResponse)
-    .catch((error) => {
-      // Error handling
-      // Check for forgot password error
-      // Learn more about AAD error codes at
-      // https://docs.microsoft.com/en-us/azure/active-directory/develop/reference-aadsts-error-codes
-      if (error.errorMessage?.indexOf('AADB2C90118') > -1) {
-        msalApp.loginPopup(config.b2cPolicies.authorities.forgotPassword).then((response) => {
-          window.alert('Password has been reset successfully. \nPlease sign-in with your new password.');
-        });
-      } else if (error.errorCode === 'user_cancelled') {
-        // User cancelled login, nothing to do
-      } else {
-        throw error;
-      }
-    });
+  msalApp.handleRedirectPromise().then(handleResponse);
 };
 
 export const signOut = () => {
@@ -188,7 +165,7 @@ export const signOut = () => {
   msalApp.logoutRedirect(logoutRequest);
 };
 
-// Returns a boolean value, stating whether the isUserSignedIn must be provided a callback const as =  paramete=> aar
+// Returns a boolean value, stating whether the isUserSignedIn must be provided a callback
 export const isAsync = () => {
   return false;
 };

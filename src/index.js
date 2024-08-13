@@ -4,7 +4,8 @@
 export { AgGridUtils, CSVUtils, FileBlobUtils, PathUtils, XLSXUtils } from './FileUtils';
 export { default as Auth } from './Auth';
 export { default as AuthDev } from './AuthDev';
-export { AuthKeycloakExperimental } from './AuthKeycloakExperimental';
+export { AuthKeycloakPopupExperimental } from './AuthKeycloakPopupExperimental';
+export { AuthKeycloakRedirectExperimental } from './AuthKeycloakRedirectExperimental';
 export { default as DatasetUtils } from './DatasetUtils';
 export { DateUtils } from './DateUtils';
 export { default as ScenarioUtils } from './ScenarioUtils';
