@@ -32,10 +32,6 @@ export const setConfig = async (newConfig) => {
   config = newConfig;
   msalApp = new msal.PublicClientApplication(config.msalConfig);
   await msalApp.initialize();
-  //
-  // if (await isUserSignedIn()) {
-  //   console.log('already signed in!');
-  // }
 };
 
 const checkInit = () => {
@@ -102,65 +98,51 @@ export const acquireTokens = async () => {
   return await _acquireTokensByRequestAndAccount(tokenReq, account);
 };
 
-export const acquireTokensByRequest = async (tokenReq) => {
-  if (!checkInit()) return;
-
-  const account = msalApp.getAllAccounts()?.[0];
-  return await _acquireTokensByRequestAndAccount(tokenReq, account);
-};
-
 const handleResponse = (response) => {
-  if (response !== null) {
-    const accountId = response.account.homeAccountId;
+  if (response != null) {
+    const account = response.account;
     writeToStorage('authIdTokenPopup', response.idToken);
     writeToStorage('authIdToken', response.idToken);
     writeToStorage('authAccessToken', response.accessToken);
     writeToStorage('authAuthenticated', 'true');
+    writeToStorage('authAccountId', account.homeAccountId);
     authData.authenticated = true;
-    const account = response.account;
     authData.accountId = account.homeAccountId;
     authData.userEmail = account.username; // In MSAL account data, username property contains user email
     authData.username = account.name;
     authData.userId = account.localAccountId;
+
     redirectOnAuthSuccess();
     return;
   }
 
-  // In case multiple accounts exist, you can select
-  const currentAccounts = msalApp.getAllAccounts();
-
-  if (currentAccounts.length === 0) {
-    // no accounts signed-in, attempt to sign a user in
-    msalApp.loginRedirect(config.loginRequest);
-  } else if (currentAccounts.length > 1) {
-    // Add choose account code here
-  } else if (currentAccounts.length === 1) {
-    const accountId = currentAccounts[0].homeAccountId;
-  }
+  msalApp.loginRedirect(config.loginRequest);
 };
 
-export const signIn = async () => {
+export const signIn = () => {
   if (!checkInit()) return;
 
-  // Force removal of MSAL interaction status if it exists in session storage (it happens sometimes after logout)
-  // const itemKey = 'msal.interaction.status';
-  // if (sessionStorage.getItem(itemKey)) {
-  //   sessionStorage.removeItem(itemKey);
-  // }
-
-  msalApp.handleRedirectPromise().then(handleResponse);
+  // Set auth provider name in storage to declare that it has an interaction in progress
+  setTimeout(() => {
+    writeToStorage('authInteractionInProgress', name);
+  }, 50);
+  return msalApp.handleRedirectPromise().then(handleResponse);
 };
 
 export const signOut = () => {
   if (!checkInit()) return;
 
+  const accountId = readFromStorage('authAccountId');
+  const idToken = readFromStorage('authIdToken');
   clearFromStorage('authIdTokenPopup');
   clearFromStorage('authIdToken');
   clearFromStorage('authAccessToken');
+  clearFromStorage('authAccountId');
   writeToStorage('authAuthenticated', 'false');
-  // return;
+
   const logoutRequest = {
-    account: msalApp.getAccountByHomeId(authData.accountId),
+    account: msalApp.getAccountByHomeId(authData.accountId ?? accountId),
+    idTokenHint: idToken,
   };
   msalApp.logoutRedirect(logoutRequest);
 };
@@ -187,6 +169,28 @@ export const isUserSignedIn = async () => {
   if (readFromStorage('authAuthenticated') === 'true') {
     authData.authenticated = true;
     return true;
+  }
+
+  // Resume interaction if one is already in progress
+  if (readFromStorage('authInteractionInProgress') === name) {
+    clearFromStorage('authInteractionInProgress');
+
+    const locationHashParameters = new URLSearchParams(window.location.hash.substring(1));
+    if (locationHashParameters.has('state')) {
+      if (locationHashParameters.has('iss', config?.msalConfig?.auth?.authorityMetadata?.issuer)) {
+        // Resume redirect workflow process
+        msalApp.handleRedirectPromise().then(handleResponse);
+        // return true;
+      } else if (locationHashParameters.has('iss')) {
+        console.warn(
+          'Issuer found in url ("' +
+            config?.msalConfig?.auth?.authorityMetadata?.issuer +
+            '") does not match the keycloak configuration ("' +
+            locationHashParameters.get('iss') +
+            '")'
+        );
+      }
+    }
   }
 
   // Otherwise, try to acquire a token silently to implement SSO
