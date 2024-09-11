@@ -50,6 +50,7 @@
     "timezone-mock": "^1.3.6"
   },
   "dependencies": {
+    "@azure/msal-browser": "^3.20.0",
     "csv-string": "^4.1.1",
     "date-fns": "^2.30.0",
     "js-file-download": "^0.4.12",
