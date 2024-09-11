@@ -1,3 +1,9 @@
+## **1.18.0** <sub><sup>2024-09-11 (cc08ecb...54ff3ae)</sup></sub>
+
+### Features
+
+- add new provider AuthKeycloakRedirect ([2cb7fb9](https://github.com/Cosmo-Tech/webapp-component-core/commit/2cb7fb9))
+
 ## **1.17.0** <sub><sup>2024-07-29 (05224df...05224df)</sup></sub>
 
 ### Features
