@@ -121,6 +121,17 @@ function isUserSignedIn(callback) {
   return currentProvider.isUserSignedIn(callback);
 }
 
+async function refreshTokens() {
+  if (currentProvider === undefined) {
+    return;
+  }
+  if (!currentProvider.refreshTokens) {
+    console.warn('Method refreshTokens is not implemented in the current authentication provider');
+    return;
+  }
+  return currentProvider.refreshTokens();
+}
+
 function getUserEmail() {
   if (currentProvider === undefined) {
     return undefined;
@@ -163,6 +174,7 @@ const Auth = {
   signOut,
   onAuthStateChanged,
   isUserSignedIn,
+  refreshTokens,
   getUserEmail,
   getUserName,
   getUserId,

@@ -43,7 +43,7 @@ const redirectOnAuthSuccess = () => {
 
 const _acquireTokensByRequestAndAccount = async (tokenReq, account) => {
   if (!tokenReq) {
-    console.warn('No base access token request provided');
+    console.warn('No token request provided');
     tokenReq = {};
   }
 
@@ -65,29 +65,30 @@ const _acquireTokensByRequestAndAccount = async (tokenReq, account) => {
         msalApp
           .acquireTokenRedirect(tokenReq)
           .then((tokenRes) => tokenRes) // Token acquired with interaction
-          .catch((tokenRedirectError) => tokenRedirectError); // Token retrieval failed
+          .catch((tokenRedirectError) => console.error(tokenRedirectError));
       }
       throw silentTokenFetchError;
     });
 };
 
-export const acquireTokens = async () => {
+// When forceRefresh is set to true, existing tokens in browser storage are ignored and new tokens are retrieved with
+// a silent request
+export const acquireTokens = async (forceRefresh = false) => {
   if (!checkInit()) return;
 
-  const idToken = readFromStorage('authIdToken');
-  const accessToken = readFromStorage('authAccessToken');
-  const authenticated = readFromStorage('authAuthenticated') === 'true';
-  if (authenticated && idToken != null && accessToken != null) {
-    return { accessToken, idToken };
+  if (!forceRefresh) {
+    const idToken = readFromStorage('authIdToken');
+    const accessToken = readFromStorage('authAccessToken');
+    const authenticated = readFromStorage('authAuthenticated') === 'true';
+    if (authenticated && idToken != null && accessToken != null) {
+      return { accessToken, idToken };
+    }
   }
 
   const account = msalApp.getAllAccounts()?.[0];
-  const tokenReq = config.accessRequest;
-  if (account === undefined) {
-    return undefined;
-  }
+  if (account === undefined) return;
 
-  return await _acquireTokensByRequestAndAccount(tokenReq, account);
+  return await _acquireTokensByRequestAndAccount(config.accessRequest, account);
 };
 
 const handleResponse = (response) => {
@@ -144,6 +145,11 @@ export const isAsync = () => {
   return false;
 };
 
+const _updateTokensInStorage = (tokens) => {
+  if (tokens?.idToken) writeToStorage('authIdToken', tokens.idToken);
+  if (tokens?.accessToken) writeToStorage('authAccessToken', tokens.accessToken);
+};
+
 const _extractRolesFromAccessToken = (accessToken) => {
   let result = [];
   if (accessToken) {
@@ -162,39 +168,40 @@ export const isUserSignedIn = async () => {
     return true;
   }
 
-  // Resume interaction if one is already in progress
-  if (readFromStorage('authInteractionInProgress') === name) {
-    clearFromStorage('authInteractionInProgress');
+  try {
+    // Resume interaction if one is already in progress
+    if (readFromStorage('authInteractionInProgress') === name) {
+      clearFromStorage('authInteractionInProgress');
 
-    const locationHashParameters = new URLSearchParams(window.location.hash.substring(1));
-    if (locationHashParameters.has('state')) {
-      if (locationHashParameters.has('iss', config?.msalConfig?.auth?.authorityMetadata?.issuer)) {
-        // Resume redirect workflow process
-        msalApp.handleRedirectPromise().then(handleResponse);
-      } else if (locationHashParameters.has('iss')) {
-        console.warn(
-          'Issuer found in url ("' +
-            config?.msalConfig?.auth?.authorityMetadata?.issuer +
-            '") does not match the keycloak configuration ("' +
-            locationHashParameters.get('iss') +
-            '")'
-        );
+      const locationHashParameters = new URLSearchParams(window.location.hash.substring(1));
+      if (locationHashParameters.has('state')) {
+        if (locationHashParameters.has('iss', config?.msalConfig?.auth?.authorityMetadata?.issuer)) {
+          msalApp.handleRedirectPromise().then(handleResponse); // Resume redirect workflow process
+        } else if (locationHashParameters.has('iss')) {
+          const configIssuer = config?.msalConfig?.auth?.authorityMetadata?.issuer;
+          const urlIssuer = locationHashParameters.get('iss');
+          console.warn(`Issuer found in url "${urlIssuer}" does not match keycloak configuration: "${configIssuer}"`);
+        }
       }
     }
-  }
 
-  // Otherwise, try to acquire a token silently to implement SSO
-  const tokens = await acquireTokens();
-  if (tokens?.idToken !== undefined) {
-    writeToStorage('authIdToken', tokens.idToken);
-  }
-  if (tokens?.accessToken !== undefined) {
-    const accessToken = tokens.accessToken;
-    authData.roles = _extractRolesFromAccessToken(accessToken);
-    writeToStorage('authAccessToken', accessToken);
-    return true;
+    // Otherwise, try to acquire a token silently to implement SSO
+    const tokens = await acquireTokens();
+    _updateTokensInStorage(tokens);
+    if (tokens?.accessToken !== undefined) {
+      authData.roles = _extractRolesFromAccessToken(tokens.accessToken);
+      return true;
+    }
+  } catch (e) {
+    console.error(e);
   }
   return false;
+};
+
+export const refreshTokens = async () => {
+  const tokens = await acquireTokens(true);
+  _updateTokensInStorage(tokens);
+  return tokens;
 };
 
 export const getUserEmail = () => {
