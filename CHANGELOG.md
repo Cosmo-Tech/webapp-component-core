@@ -1,3 +1,9 @@
+## **1.18.1** <sub><sup>2024-09-17 (3629ee8...3629ee8)</sup></sub>
+
+### Bug Fixes
+
+- add mechanism to refresh tokens for Keycloak auth provider ([3629ee8](https://github.com/Cosmo-Tech/webapp-component-core/commit/3629ee8))
+
 ## **1.18.0** <sub><sup>2024-09-11 (cc08ecb...54ff3ae)</sup></sub>
 
 ### Features
