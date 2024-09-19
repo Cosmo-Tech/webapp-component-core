@@ -10,7 +10,6 @@ const clearFromStorage = (key) => localStorage.removeItem(key);
 
 export const name = 'auth-keycloakRedirect';
 const authData = {
-  authenticated: readFromStorage('authAuthenticated') === 'true',
   accountId: undefined,
   userEmail: undefined,
   username: undefined,
@@ -76,30 +75,27 @@ const _acquireTokensByRequestAndAccount = async (tokenReq, account) => {
 export const acquireTokens = async (forceRefresh = false) => {
   if (!checkInit()) return;
 
-  if (!forceRefresh) {
+  if (!forceRefresh && readFromStorage('authAuthenticated') === 'true') {
     const idToken = readFromStorage('authIdToken');
     const accessToken = readFromStorage('authAccessToken');
-    const authenticated = readFromStorage('authAuthenticated') === 'true';
-    if (authenticated && idToken != null && accessToken != null) {
-      return { accessToken, idToken };
-    }
+    return { accessToken, idToken };
   }
 
   const account = msalApp.getAllAccounts()?.[0];
   if (account === undefined) return;
 
-  return await _acquireTokensByRequestAndAccount(config.accessRequest, account);
+  const tokens = await _acquireTokensByRequestAndAccount(config.accessRequest, account);
+  _updateTokensInStorage(tokens);
+  return tokens;
 };
 
 const handleResponse = (response) => {
   if (response != null) {
     const account = response.account;
+    _updateTokensInStorage(response);
     writeToStorage('authIdTokenPopup', response.idToken);
-    writeToStorage('authIdToken', response.idToken);
-    writeToStorage('authAccessToken', response.accessToken);
     writeToStorage('authAuthenticated', 'true');
     writeToStorage('authAccountId', account.homeAccountId);
-    authData.authenticated = true;
     authData.accountId = account.homeAccountId;
     authData.userEmail = account.username; // In MSAL account data, username property contains user email
     authData.username = account.name;
@@ -147,24 +143,30 @@ export const isAsync = () => {
 
 const _updateTokensInStorage = (tokens) => {
   if (tokens?.idToken) writeToStorage('authIdToken', tokens.idToken);
-  if (tokens?.accessToken) writeToStorage('authAccessToken', tokens.accessToken);
+  if (tokens?.accessToken) {
+    writeToStorage('authAccessToken', tokens.accessToken);
+    authData.roles = _extractRolesFromAccessToken(tokens.accessToken);
+  }
 };
 
 const _extractRolesFromAccessToken = (accessToken) => {
   let result = [];
   if (accessToken) {
     const decodedToken = JSON.parse(atob(accessToken.split('.')[1]));
-    if (decodedToken?.roles) {
-      result = decodedToken?.roles;
-    }
+    // The exact key to use may depend from keycloak client & API configuration
+    if (decodedToken?.roles) result = decodedToken.roles;
+    else if (decodedToken?.userRoles) result = decodedToken.userRoles;
   }
   return result;
 };
 
 export const isUserSignedIn = async () => {
-  if (authData.authenticated) return true;
   if (readFromStorage('authAuthenticated') === 'true') {
-    authData.authenticated = true;
+    // Restore roles from access token if necessary (roles in auhtData may be lost after login redirection)
+    if (authData.roles.length === 0) {
+      const accessToken = readFromStorage('authAccessToken');
+      if (accessToken) authData.roles = _extractRolesFromAccessToken(accessToken);
+    }
     return true;
   }
 
@@ -188,10 +190,7 @@ export const isUserSignedIn = async () => {
     // Otherwise, try to acquire a token silently to implement SSO
     const tokens = await acquireTokens();
     _updateTokensInStorage(tokens);
-    if (tokens?.accessToken !== undefined) {
-      authData.roles = _extractRolesFromAccessToken(tokens.accessToken);
-      return true;
-    }
+    if (tokens?.accessToken !== undefined) return true;
   } catch (e) {
     console.error(e);
   }
