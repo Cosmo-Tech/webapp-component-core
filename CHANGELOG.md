@@ -1,3 +1,9 @@
+## **1.18.2** <sub><sup>2024-09-23 (e619d7e...e619d7e)</sup></sub>
+
+### Bug Fixes
+
+- fix empty user roles when using Keycloak auth provider ([e619d7e](https://github.com/Cosmo-Tech/webapp-component-core/commit/e619d7e))
+
 ## **1.18.1** <sub><sup>2024-09-17 (3629ee8...3629ee8)</sup></sub>
 
 ### Bug Fixes
