@@ -150,14 +150,33 @@ const _updateTokensInStorage = (tokens) => {
 };
 
 const _extractRolesFromAccessToken = (accessToken) => {
-  let result = [];
-  if (accessToken) {
-    const decodedToken = JSON.parse(atob(accessToken.split('.')[1]));
-    // The exact key to use may depend from keycloak client & API configuration
-    if (decodedToken?.roles) result = decodedToken.roles;
-    else if (decodedToken?.userRoles) result = decodedToken.userRoles;
+  if (!accessToken) return [];
+
+  const decodedToken = JSON.parse(atob(accessToken.split('.')[1]));
+  // The exact key to use may depend from keycloak client & Cosmo Tech API configuration (c.f. the value of
+  // csm.platform.authorization.roles-jwt-claim in your k8s tenant secrets)
+  const rolesTokenAttribute = config?.rolesJwtClaim;
+  if (rolesTokenAttribute) {
+    if (decodedToken?.[rolesTokenAttribute]) return decodedToken?.[rolesTokenAttribute];
+    console.warn(
+      `Authentication provider configuration defined rolesJwtClaim="${rolesTokenAttribute}" ` +
+        'but this key was not found in the access token. Please check your webapp and API configuration.'
+    );
   }
-  return result;
+
+  if (decodedToken?.roles) return decodedToken.roles; // Legacy default key in token
+
+  if (decodedToken?.userRoles) {
+    console.warn(
+      "DEPRECATED: the token claim for API roles was automatically found in 'userRoles', but the lookup " +
+        'for this specific key will be removed in a future version. Please update your webapp configuration to ' +
+        "explicitly set AUTH_KEYCLOAK_ROLES_JWT_CLAIM to 'userRoles'."
+    );
+    return decodedToken.userRoles;
+  }
+
+  console.warn("Couldn't extract roles from access token. Please check your webapp and API configuration.");
+  return [];
 };
 
 export const isUserSignedIn = async () => {
