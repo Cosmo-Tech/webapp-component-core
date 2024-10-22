@@ -1,3 +1,9 @@
+## **1.19.0** <sub><sup>2024-10-22 (07716f7...07716f7)</sup></sub>
+
+### Features
+
+- add configuration option `rolesJwtClaim` in `AuthKeycloakRedirect` provider ([07716f7](https://github.com/Cosmo-Tech/webapp-component-core/commit/07716f7))
+
 ## **1.18.2** <sub><sup>2024-09-23 (e619d7e...e619d7e)</sup></sub>
 
 ### Bug Fixes
