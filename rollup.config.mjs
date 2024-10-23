@@ -1,11 +1,13 @@
 import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
+import image from '@rollup/plugin-image';
+import resolve from '@rollup/plugin-node-resolve';
+import { readFileSync } from 'fs';
 import external from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
-import resolve from '@rollup/plugin-node-resolve';
-import image from '@rollup/plugin-image';
 import { visualizer } from 'rollup-plugin-visualizer';
-import pkg from './package.json' assert { type: 'json' };
+
+const pkg = JSON.parse(readFileSync('./package.json'));
 
 export default {
   input: './src/index.js',
@@ -27,7 +29,7 @@ export default {
       babelHelpers: 'bundled',
     }),
     resolve(),
-    commonjs(),
+    commonjs({ strictRequires: 'auto' }),
     image(),
     visualizer(),
   ],
