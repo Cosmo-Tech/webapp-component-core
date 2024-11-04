@@ -96,8 +96,9 @@ const handleResponse = (response) => {
     writeToStorage('authIdTokenPopup', response.idToken);
     writeToStorage('authAuthenticated', 'true');
     writeToStorage('authAccountId', account.homeAccountId);
+    writeToStorage('authEmail', account.idTokenClaims?.email);
     authData.accountId = account.homeAccountId;
-    authData.userEmail = account.username; // In MSAL account data, username property contains user email
+    authData.userEmail = account.idTokenClaims?.email;
     authData.username = account.name;
     authData.userId = account.localAccountId;
 
@@ -127,6 +128,7 @@ export const signOut = () => {
   clearFromStorage('authIdToken');
   clearFromStorage('authAccessToken');
   clearFromStorage('authAccountId');
+  clearFromStorage('authEmail');
   writeToStorage('authAuthenticated', 'false');
 
   const logoutRequest = {
@@ -225,7 +227,7 @@ export const refreshTokens = async () => {
 export const getUserEmail = () => {
   if (!checkInit()) return;
   // Note: account data from MSAL seems to contain user email in the 'username' property
-  return authData?.userEmail ?? msalApp.getAllAccounts()?.[0]?.username;
+  return readFromStorage('authEmail') ?? authData?.userEmail ?? msalApp.getAllAccounts()?.[0]?.username;
 };
 
 export const getUserName = () => {
