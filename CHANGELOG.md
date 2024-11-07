@@ -1,3 +1,7 @@
+## **1.19.1** <sub><sup>2024-11-07 (6023cdc...6023cdc)</sup></sub>
+
+- update dependencies
+
 ## **1.19.0** <sub><sup>2024-10-22 (07716f7...07716f7)</sup></sub>
 
 ### Features
