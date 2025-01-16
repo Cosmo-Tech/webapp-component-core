@@ -1,7 +1,5 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
-import { NAME_VALIDATOR } from './constants';
-
 const scenarioExistsInList = (scenarioName, scenarioList) => {
   scenarioName = scenarioName.trim();
   return scenarioList.find((scenario) => scenario.name.trim() === scenarioName) !== undefined;
@@ -21,15 +19,8 @@ const scenarioExistsInTree = (scenarioName, scenarioTree) => {
 
 const scenarioNameIsValid = (scenarioName, scenarioList) => {
   scenarioName = scenarioName.trimEnd();
-  if (scenarioName.length === 0) {
-    return 'emptyScenarioName';
-  } else {
-    if (scenarioName.match(NAME_VALIDATOR) === null) {
-      return 'forbiddenCharsInScenarioName';
-    } else if (scenarioExistsInList(scenarioName, scenarioList)) {
-      return 'existingScenarioName';
-    }
-  }
+  if (scenarioName.length === 0) return 'emptyScenarioName';
+  if (scenarioExistsInList(scenarioName, scenarioList)) return 'existingScenarioName';
   return null;
 };
 
