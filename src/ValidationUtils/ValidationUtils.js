@@ -2,6 +2,22 @@
 // Licensed under the MIT license.
 import validator from 'validator';
 import { DateUtils } from '../DateUtils';
+import { Error } from '../models';
+
+const forgeTypeError = (value, type, options) => {
+  let expected;
+  if (type === 'enum') expected = `Expected values: [${options.enumValues.join()}]`;
+  else if (type === 'date') expected = `Expected format: ${options.dateFormat}`;
+
+  const error = new Error(`Incorrect ${type} value`, null, `Incorrect value: "${value}" for type ${type}`);
+  if (expected) error.context += '\n' + expected;
+  return error;
+};
+
+const forgeConfigError = (errorContext) => {
+  console.warn(`Configuration error: ${errorContext}`);
+  return { summary: 'Configuration error', context: errorContext };
+};
 
 const isBool = (dataStr) => {
   return validator.isBoolean(dataStr, { loose: true });
@@ -33,28 +49,21 @@ const isValid = (dataStr, type, options, canBeEmpty = false) => {
   }
   switch (type) {
     case 'bool':
-      return isBool(dataStr);
+      return isBool(dataStr) || forgeTypeError(dataStr, type, options);
     case 'date':
-      if (!options.dateFormat) {
-        console.error("Missing option dateFormat, can't perform date validation.");
-        return false;
-      }
-      return isDate(dataStr, options.dateFormat);
+      if (!options.dateFormat) return forgeConfigError("Missing option dateFormat, can't perform date validation.");
+      return isDate(dataStr, options.dateFormat) || forgeTypeError(dataStr, type, options);
     case 'enum':
-      if (!options.enumValues) {
-        console.error("Missing option enumValues, can't perform enum validation.");
-        return false;
-      }
-      return isEnum(dataStr, options.enumValues);
+      if (!options.enumValues) return forgeConfigError("Missing option enumValues, can't perform enum validation.");
+      return isEnum(dataStr, options.enumValues) || forgeTypeError(dataStr, type, options);
     case 'int':
-      return isInt(dataStr);
+      return isInt(dataStr) || forgeTypeError(dataStr, type, options);
     case 'number':
-      return isNumber(dataStr);
+      return isNumber(dataStr) || forgeTypeError(dataStr, type, options);
     case 'string':
-      return isString(dataStr);
+      return isString(dataStr) || forgeTypeError(dataStr, type, options);
     default:
-      console.error(`Unknown type "${type}", can't perform type validation.`);
-      return false;
+      return forgeConfigError(`Unknown type "${type}", can't perform type validation.`);
   }
 };
 

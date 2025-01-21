@@ -1,6 +1,7 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
 import { ValidationUtils } from '..';
+import { Error } from '../../models';
 
 describe('isBool', () => {
   test.each`
@@ -138,7 +139,14 @@ describe('isValid', () => {
     ${'False'}      | ${'enum'}   | ${false}
     ${'False'}      | ${'bool'}   | ${true}
   `('$dataStr is of type $type must be $expectedRes', ({ dataStr, type, expectedRes }) => {
+    let additionalContext;
+    if (type === 'date') additionalContext = `Expected format: ${options.dateFormat}`;
+    else if (type === 'enum') additionalContext = `Expected values: [${options.enumValues.join()}]`;
+
+    const expectedError = new Error(`Incorrect ${type} value`, null, `Incorrect value: "${dataStr}" for type ${type}`);
+    if (additionalContext) expectedError.context += '\n' + additionalContext;
+
     const res = ValidationUtils.isValid(dataStr, type, options);
-    expect(res).toStrictEqual(expectedRes);
+    expect(res).toStrictEqual(expectedRes || expectedError);
   });
 });
