@@ -100,8 +100,12 @@ const _validateFormat = (rows, hasHeader, cols, options) => {
         const colType = colsData[colIndex].type;
         if (colType && rowCell !== undefined) {
           // use of cellEditorParams is deprecated
-          const enumValues = colsData[colIndex]?.enumValues ?? colsData[colIndex]?.cellEditorParams?.enumValues;
-          const colOptions = { ...options, enumValues };
+          const colOptions = {
+            ...options,
+            enumValues: colsData[colIndex]?.enumValues ?? colsData[colIndex]?.cellEditorParams?.enumValues,
+            minValue: colsData[colIndex]?.minValue,
+            maxValue: colsData[colIndex]?.maxValue,
+          };
           const acceptsEmptyFields =
             // use of cellEditorParams is deprecated
             colsData[colIndex].acceptsEmptyFields ?? colsData[colIndex].cellEditorParams?.acceptsEmptyFields ?? false;
