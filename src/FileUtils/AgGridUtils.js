@@ -54,16 +54,6 @@ const _buildNumberColumnsError = (rowLineNumber, expectedCols, row) => {
   return new PanelError(errorSummary, errorLoc, errorContext);
 };
 
-const _buildTypeError = (type, rowLineNumber, colIndex, colsData, value, expected) => {
-  const errorSummary = `Incorrect ${type} value`;
-  const errorLoc = `Line ${rowLineNumber}, Column ${colIndex + 1} ("${colsData[colIndex].field}")`;
-  const errorContext = `${errorSummary} (${errorLoc})\n` + `Incorrect value : "${value}" for type ${type}`;
-  if (!expected || expected.length === 0) {
-    return new PanelError(errorSummary, errorLoc, errorContext);
-  }
-  return new PanelError(errorSummary, errorLoc, errorContext + '\n' + expected);
-};
-
 const DEFAULT_CSV_EXPORT_OPTIONS = {
   colSep: ',',
   dateFormat: 'yyyy-MM-dd',
@@ -80,16 +70,6 @@ const _forgeColumnsCountError = (row, rowLineNumber, expectedCols, errors) => {
     if (column === undefined) errors.push(_buildEmptyFieldError(rowLineNumber, expectedCols, i));
   });
   if (row.length !== expectedCols.length) errors.push(_buildNumberColumnsError(rowLineNumber, expectedCols, row));
-};
-
-const _forgeTypeError = (value, rowLineNumber, type, options, colsData, colIndex) => {
-  let expected = '';
-  if (type === 'enum') {
-    expected = `Expected values: [${options.enumValues.join()}]`;
-  } else if (type === 'date') {
-    expected = `Expected format: ${options.dateFormat}`;
-  }
-  return _buildTypeError(type, rowLineNumber, colIndex, colsData, value, expected);
 };
 
 const _getColTypeFromTypeArray = (typeArray) => {
@@ -120,13 +100,20 @@ const _validateFormat = (rows, hasHeader, cols, options) => {
         const colType = colsData[colIndex].type;
         if (colType && rowCell !== undefined) {
           // use of cellEditorParams is deprecated
-          const enumValues = colsData[colIndex]?.enumValues ?? colsData[colIndex]?.cellEditorParams?.enumValues;
-          const colOptions = { ...options, enumValues };
+          const colOptions = {
+            ...options,
+            enumValues: colsData[colIndex]?.enumValues ?? colsData[colIndex]?.cellEditorParams?.enumValues,
+            minValue: colsData[colIndex]?.minValue,
+            maxValue: colsData[colIndex]?.maxValue,
+          };
           const acceptsEmptyFields =
             // use of cellEditorParams is deprecated
             colsData[colIndex].acceptsEmptyFields ?? colsData[colIndex].cellEditorParams?.acceptsEmptyFields ?? false;
-          if (!ValidationUtils.isValid(rowCell, colType, colOptions, acceptsEmptyFields)) {
-            errors.push(_forgeTypeError(rowCell, rowIndex + 1, colType, colOptions, colsData, colIndex));
+          const validationResult = ValidationUtils.isValid(rowCell, colType, colOptions, acceptsEmptyFields);
+          if (validationResult !== true) {
+            const { summary: errorSummary, context: errorContext } = validationResult;
+            const errorLoc = `Line ${rowIndex + 1}, Column ${colIndex + 1} ("${colsData[colIndex].field}")`;
+            errors.push(new PanelError(errorSummary, errorLoc, errorContext));
           }
         }
       }

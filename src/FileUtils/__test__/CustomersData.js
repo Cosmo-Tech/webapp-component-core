@@ -73,7 +73,7 @@ export const CUSTOMERS_COLS = [
   {
     headerName: 'identity',
     children: [
-      { field: 'birthday', type: ['date'], minValue: '1900-01-01', maxValue: new Date().toISOString() },
+      { field: 'birthday', type: ['date'], minValue: new Date('1900-01-01'), maxValue: new Date('2030-01-01') },
       { field: 'height', type: ['number'], minValue: 0, maxValue: 2.5 },
     ],
   },
@@ -88,7 +88,7 @@ export const CUSTOMERS_COLS_DEPRECATED = [
     type: ['enum'],
     cellEditorParams: { enumValues: ['AppleJuice', 'Beer', 'OrangeJuice', 'Wine'] },
   },
-  { field: 'birthday', type: ['date'], minValue: '1900-01-01', maxValue: new Date().toISOString() },
+  { field: 'birthday', type: ['date'], minValue: new Date('1900-01-01'), maxValue: new Date('2030-01-01') },
   { field: 'height', type: ['number'], minValue: 0, maxValue: 2.5 },
 ];
 
@@ -210,6 +210,8 @@ export const INVALID_CUSTOMERS_ROWS = [
   ['Bob', '15', '1', 'AppleJuice', 'bad_date', '1.70'],
   ['Bob', '15', '0', 'AppleJuice', '01/01/2000', 'bad_number'],
   ['Bob', 'bad_int', 'bad_bool', 'bad_enum', 'bad_date', 'bad_number'],
+  ['Bob', '-1', 'yes', 'AppleJuice', '01/01/1899', '-0.1'], // minValue not respected
+  ['Bob', '999', 'yes', 'AppleJuice', '01/01/2999', '99.9'], // maxValue not respected
   ['Bob', '15', 'yes', 'AppleJuice', '01/01/2000', '1.70'],
 ];
 
@@ -221,64 +223,55 @@ export const EXPECTED_ERRORS_WITH_HEADER = [
       'Expected data format : "name,age,canDrinkAlcohol,favoriteDrink,birthday,height"\n' +
       'Incorrect Row : "MissingColumns"'
   ),
-  new Error(
-    'Incorrect int value',
-    'Line 3, Column 2 ("age")',
-    'Incorrect int value (Line 3, Column 2 ("age"))\nIncorrect value : "bad_int" for type int'
-  ),
+  new Error('Incorrect int value', 'Line 3, Column 2 ("age")', 'Incorrect value: "bad_int" for type int'),
   new Error(
     'Incorrect bool value',
     'Line 4, Column 3 ("canDrinkAlcohol")',
-    'Incorrect bool value (Line 4, Column 3 ("canDrinkAlcohol"))\nIncorrect value : "bad_bool" for type bool'
+    'Incorrect value: "bad_bool" for type bool'
   ),
   new Error(
     'Incorrect enum value',
     'Line 5, Column 4 ("favoriteDrink")',
-    'Incorrect enum value (Line 5, Column 4 ("favoriteDrink"))\n' +
-      'Incorrect value : "bad_enum" for type enum\n' +
-      'Expected values: [AppleJuice,Beer,OrangeJuice,Wine]'
+    'Incorrect value: "bad_enum" for type enum\n' + 'Expected values: [AppleJuice,Beer,OrangeJuice,Wine]'
   ),
   new Error(
     'Incorrect date value',
     'Line 6, Column 5 ("birthday")',
-    'Incorrect date value (Line 6, Column 5 ("birthday"))\n' +
-      'Incorrect value : "bad_date" for type date\n' +
-      'Expected format: dd/MM/yyyy'
+    'Incorrect value: "bad_date" for type date\n' + 'Expected format: dd/MM/yyyy'
   ),
-  new Error(
-    'Incorrect number value',
-    'Line 7, Column 6 ("height")',
-    'Incorrect number value (Line 7, Column 6 ("height"))\nIncorrect value : "bad_number" for type number'
-  ),
-  new Error(
-    'Incorrect int value',
-    'Line 8, Column 2 ("age")',
-    'Incorrect int value (Line 8, Column 2 ("age"))\nIncorrect value : "bad_int" for type int'
-  ),
+  new Error('Incorrect number value', 'Line 7, Column 6 ("height")', 'Incorrect value: "bad_number" for type number'),
+  new Error('Incorrect int value', 'Line 8, Column 2 ("age")', 'Incorrect value: "bad_int" for type int'),
   new Error(
     'Incorrect bool value',
     'Line 8, Column 3 ("canDrinkAlcohol")',
-    'Incorrect bool value (Line 8, Column 3 ("canDrinkAlcohol"))\nIncorrect value : "bad_bool" for type bool'
+    'Incorrect value: "bad_bool" for type bool'
   ),
   new Error(
     'Incorrect enum value',
     'Line 8, Column 4 ("favoriteDrink")',
-    'Incorrect enum value (Line 8, Column 4 ("favoriteDrink"))\n' +
-      'Incorrect value : "bad_enum" for type enum\n' +
-      'Expected values: [AppleJuice,Beer,OrangeJuice,Wine]'
+    'Incorrect value: "bad_enum" for type enum\n' + 'Expected values: [AppleJuice,Beer,OrangeJuice,Wine]'
   ),
   new Error(
     'Incorrect date value',
     'Line 8, Column 5 ("birthday")',
-    'Incorrect date value (Line 8, Column 5 ("birthday"))\n' +
-      'Incorrect value : "bad_date" for type date\n' +
-      'Expected format: dd/MM/yyyy'
+    'Incorrect value: "bad_date" for type date\n' + 'Expected format: dd/MM/yyyy'
   ),
+  new Error('Incorrect number value', 'Line 8, Column 6 ("height")', 'Incorrect value: "bad_number" for type number'),
+  // Min/max values errors
+  new Error('Value out of range', 'Line 9, Column 2 ("age")', 'Value "-1" should be greater than 0'),
   new Error(
-    'Incorrect number value',
-    'Line 8, Column 6 ("height")',
-    'Incorrect number value (Line 8, Column 6 ("height"))\nIncorrect value : "bad_number" for type number'
+    'Value out of range',
+    'Line 9, Column 5 ("birthday")',
+    'Value "01/01/1899" should be greater than 01/01/1900'
   ),
+  new Error('Value out of range', 'Line 9, Column 6 ("height")', 'Value "-0.1" should be greater than 0'),
+  new Error('Value out of range', 'Line 10, Column 2 ("age")', 'Value "999" should be less than 120'),
+  new Error(
+    'Value out of range',
+    'Line 10, Column 5 ("birthday")',
+    'Value "01/01/2999" should be less than 01/01/2030'
+  ),
+  new Error('Value out of range', 'Line 10, Column 6 ("height")', 'Value "99.9" should be less than 2.5'),
 ];
 
 export const EXPECTED_ERRORS_WITHOUT_COLS = [
@@ -298,64 +291,51 @@ export const EXPECTED_ERRORS_WITHOUT_HEADER = [
       'Expected data format : "name,age,canDrinkAlcohol,favoriteDrink,birthday,height"\n' +
       'Incorrect Row : "MissingColumns"'
   ),
-  new Error(
-    'Incorrect int value',
-    'Line 2, Column 2 ("age")',
-    'Incorrect int value (Line 2, Column 2 ("age"))\nIncorrect value : "bad_int" for type int'
-  ),
+  new Error('Incorrect int value', 'Line 2, Column 2 ("age")', 'Incorrect value: "bad_int" for type int'),
   new Error(
     'Incorrect bool value',
     'Line 3, Column 3 ("canDrinkAlcohol")',
-    'Incorrect bool value (Line 3, Column 3 ("canDrinkAlcohol"))\nIncorrect value : "bad_bool" for type bool'
+    'Incorrect value: "bad_bool" for type bool'
   ),
   new Error(
     'Incorrect enum value',
     'Line 4, Column 4 ("favoriteDrink")',
-    'Incorrect enum value (Line 4, Column 4 ("favoriteDrink"))\n' +
-      'Incorrect value : "bad_enum" for type enum\n' +
-      'Expected values: [AppleJuice,Beer,OrangeJuice,Wine]'
+    'Incorrect value: "bad_enum" for type enum\n' + 'Expected values: [AppleJuice,Beer,OrangeJuice,Wine]'
   ),
   new Error(
     'Incorrect date value',
     'Line 5, Column 5 ("birthday")',
-    'Incorrect date value (Line 5, Column 5 ("birthday"))\n' +
-      'Incorrect value : "bad_date" for type date\n' +
-      'Expected format: dd/MM/yyyy'
+    'Incorrect value: "bad_date" for type date\n' + 'Expected format: dd/MM/yyyy'
   ),
-  new Error(
-    'Incorrect number value',
-    'Line 6, Column 6 ("height")',
-    'Incorrect number value (Line 6, Column 6 ("height"))\nIncorrect value : "bad_number" for type number'
-  ),
-  new Error(
-    'Incorrect int value',
-    'Line 7, Column 2 ("age")',
-    'Incorrect int value (Line 7, Column 2 ("age"))\nIncorrect value : "bad_int" for type int'
-  ),
+  new Error('Incorrect number value', 'Line 6, Column 6 ("height")', 'Incorrect value: "bad_number" for type number'),
+  new Error('Incorrect int value', 'Line 7, Column 2 ("age")', 'Incorrect value: "bad_int" for type int'),
   new Error(
     'Incorrect bool value',
     'Line 7, Column 3 ("canDrinkAlcohol")',
-    'Incorrect bool value (Line 7, Column 3 ("canDrinkAlcohol"))\nIncorrect value : "bad_bool" for type bool'
+    'Incorrect value: "bad_bool" for type bool'
   ),
   new Error(
     'Incorrect enum value',
     'Line 7, Column 4 ("favoriteDrink")',
-    'Incorrect enum value (Line 7, Column 4 ("favoriteDrink"))\n' +
-      'Incorrect value : "bad_enum" for type enum\n' +
-      'Expected values: [AppleJuice,Beer,OrangeJuice,Wine]'
+    'Incorrect value: "bad_enum" for type enum\n' + 'Expected values: [AppleJuice,Beer,OrangeJuice,Wine]'
   ),
   new Error(
     'Incorrect date value',
     'Line 7, Column 5 ("birthday")',
-    'Incorrect date value (Line 7, Column 5 ("birthday"))\n' +
-      'Incorrect value : "bad_date" for type date\n' +
-      'Expected format: dd/MM/yyyy'
+    'Incorrect value: "bad_date" for type date\n' + 'Expected format: dd/MM/yyyy'
   ),
+  new Error('Incorrect number value', 'Line 7, Column 6 ("height")', 'Incorrect value: "bad_number" for type number'),
+  // Min/max values errors
+  new Error('Value out of range', 'Line 8, Column 2 ("age")', 'Value "-1" should be greater than 0'),
   new Error(
-    'Incorrect number value',
-    'Line 7, Column 6 ("height")',
-    'Incorrect number value (Line 7, Column 6 ("height"))\nIncorrect value : "bad_number" for type number'
+    'Value out of range',
+    'Line 8, Column 5 ("birthday")',
+    'Value "01/01/1899" should be greater than 01/01/1900'
   ),
+  new Error('Value out of range', 'Line 8, Column 6 ("height")', 'Value "-0.1" should be greater than 0'),
+  new Error('Value out of range', 'Line 9, Column 2 ("age")', 'Value "999" should be less than 120'),
+  new Error('Value out of range', 'Line 9, Column 5 ("birthday")', 'Value "01/01/2999" should be less than 01/01/2030'),
+  new Error('Value out of range', 'Line 9, Column 6 ("height")', 'Value "99.9" should be less than 2.5'),
 ];
 
 export const EXPECTED_CUSTOM_CSV_OUTPUT =
