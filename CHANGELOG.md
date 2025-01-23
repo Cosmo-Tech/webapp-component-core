@@ -1,3 +1,19 @@
+## **2.0.0** <sub><sup>2025-01-23 (ba70eef...4d0f1df)</sup></sub>
+
+### Features
+
+- add min & max validation in ValidationUtils and AgGridUtils file uploads ([c7f0b3d](https://github.com/Cosmo-Tech/webapp-component-core/commit/c7f0b3d))
+
+### Bug Fixes
+
+- fix user email retrieved from keycloak accounts ([ba70eef](https://github.com/Cosmo-Tech/webapp-component-core/commit/ba70eef))
+- remove forbidden characters constraint in scenario names ([9b67422](https://github.com/Cosmo-Tech/webapp-component-core/commit/9b67422))
+- modify isValid function to return error structures on validation fail ([ce4ba32](https://github.com/Cosmo-Tech/webapp-component-core/commit/ce4ba32))
+
+### BREAKING CHANGES
+
+- the function isValid now returns an Error object when the validation failed, or true if it succeeded. The Error object contains three fields: summary, context and location (the last one is set to null by the isValid function).
+
 ## **1.19.1** <sub><sup>2024-11-07 (6023cdc...6023cdc)</sup></sub>
 
 - update dependencies
