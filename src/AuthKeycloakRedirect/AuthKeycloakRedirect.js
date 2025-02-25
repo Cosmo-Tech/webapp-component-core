@@ -36,6 +36,26 @@ const checkInit = () => {
   return true;
 };
 
+const getActiveAccountFromMSAL = () => {
+  const accountId = readFromStorage('authAccountId');
+  if (!accountId) {
+    return;
+  }
+  const allAccounts = msalApp.getAllAccounts();
+  if (!allAccounts.length === 0) {
+    console.warn('WARNING: no accounts found, please log in');
+    return;
+  }
+
+  const account = allAccounts.find((account) => account.homeAccountId === accountId);
+  if (account === undefined) {
+    console.warn(`WARNING: no account found with id "${accountId}", cannot retrieve account`);
+    return;
+  }
+
+  return account;
+};
+
 const redirectOnAuthSuccess = () => {
   window.location.href = config?.msalConfig?.auth?.redirectUri ?? '/';
 };
@@ -81,7 +101,7 @@ export const acquireTokens = async (forceRefresh = false) => {
     return { accessToken, idToken };
   }
 
-  const account = msalApp.getAllAccounts()?.[0];
+  const account = getActiveAccountFromMSAL();
   if (account === undefined) return;
 
   const tokens = await _acquireTokensByRequestAndAccount(config.accessRequest, account);
@@ -124,6 +144,7 @@ export const signOut = () => {
 
   const accountId = readFromStorage('authAccountId');
   const idToken = readFromStorage('authIdToken');
+
   clearFromStorage('authIdTokenPopup');
   clearFromStorage('authIdToken');
   clearFromStorage('authAccessToken');
@@ -226,18 +247,20 @@ export const refreshTokens = async () => {
 
 export const getUserEmail = () => {
   if (!checkInit()) return;
+
+  const account = getActiveAccountFromMSAL();
   // Note: account data from MSAL seems to contain user email in the 'username' property
-  return readFromStorage('authEmail') ?? authData?.userEmail ?? msalApp.getAllAccounts()?.[0]?.username;
+  return readFromStorage('authEmail') ?? authData?.userEmail ?? account?.username;
 };
 
 export const getUserName = () => {
   if (!checkInit()) return;
-  return authData?.name ?? msalApp.getAllAccounts()?.[0]?.name;
+  return authData?.name ?? getActiveAccountFromMSAL()?.name;
 };
 
 export const getUserId = () => {
   if (!checkInit()) return;
-  return authData?.userId ?? msalApp.getAllAccounts()?.[0]?.localAccountId;
+  return authData?.userId ?? getActiveAccountFromMSAL()?.localAccountId;
 };
 
 export const getUserRoles = () => {
