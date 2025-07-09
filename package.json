@@ -5,7 +5,7 @@
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "scripts": {
-    "build": "node --experimental-json-modules ./node_modules/.bin/rollup -c",
+    "build": "node ./node_modules/.bin/rollup -c",
     "eslint": "eslint",
     "test": "jest --watchAll=false",
     "prettier": "npx prettier -w"
