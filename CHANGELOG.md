@@ -1,3 +1,14 @@
+## **2.0.1** <sub><sup>2025-09-19 (7021d37...40b3c7f)</sup></sub>
+
+### Bug Fixes
+
+- fix possible bug when multiple local MSAL accounts exist ([8510a1b](https://github.com/Cosmo-Tech/webapp-component-core/commit/8510a1b581234485c7dd1687339f2727a25901b0))
+
+### Dependencies
+
+- upgrade to node 24
+- update dependencies
+
 ## **2.0.0** <sub><sup>2025-01-23 (ba70eef...4d0f1df)</sup></sub>
 
 ### Features
