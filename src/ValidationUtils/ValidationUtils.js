@@ -69,9 +69,7 @@ const castToDate = (dateOrStrValue, dateFormat) => {
   return DateUtils.parse(dateOrStrValue, dateFormat);
 };
 
-const isDateInRange = (value, minValue, maxValue, dateFormat) => {
-  const minDate = castToDate(minValue, dateFormat);
-  const maxDate = castToDate(maxValue, dateFormat);
+const isDateInRange = (value, minDate, maxDate, dateFormat) => {
   const format = DateUtils.format;
   if (value == null) return null;
   if (dateFormat == null) return forgeConfigError("Missing option dateFormat, can't perform date validation.");
@@ -97,8 +95,11 @@ const isValid = (dataStr, type, options, canBeEmpty = false) => {
       if (!options?.dateFormat) return forgeConfigError("Missing option dateFormat, can't perform date validation.");
 
       const valueAsDate = DateUtils.parse(dataStr, options?.dateFormat);
-      if (isNaN(valueAsDate.getTime())) return forgeTypeError(dataStr, type, options);
-      return isDateInRange(valueAsDate, options?.minValue, options?.maxValue, options?.dateFormat);
+      if (isNaN(valueAsDate.getTime())) return forgeTypeError(dataStr, type, options); // Invalid date
+
+      const minDate = options?.minDate ?? castToDate(options?.minValue, options?.dateFormat);
+      const maxDate = options?.maxDate ?? castToDate(options?.maxValue, options?.dateFormat);
+      return isDateInRange(valueAsDate, minDate, maxDate, options?.dateFormat);
     }
     case 'enum':
       if (!options.enumValues) return forgeConfigError("Missing option enumValues, can't perform enum validation.");

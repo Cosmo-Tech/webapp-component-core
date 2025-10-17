@@ -1,5 +1,6 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
+import DateUtils from '../DateUtils/DateUtils';
 import { ValidationUtils } from '../ValidationUtils';
 import { Error as PanelError } from '../models';
 import CSV from './CSVUtils';
@@ -101,6 +102,14 @@ const _validateFormat = (rows, hasHeader, cols, options) => {
       maxValue: col.maxValue,
     },
   }));
+  // For date columns, convert min & max values to do it only once
+  colMeta.forEach((col) => {
+    if (col.type === 'date' && options?.dateFormat) {
+      const colOptions = col.colOptions;
+      if (colOptions.minValue != null) colOptions.minDate = DateUtils.parse(colOptions.minValue, options?.dateFormat);
+      if (colOptions.maxValue != null) colOptions.maxDate = DateUtils.parse(colOptions.maxValue, options?.dateFormat);
+    }
+  });
 
   for (let rowIndex = startIndex; rowIndex < rows.length; rowIndex++) {
     const row = rows[rowIndex];
