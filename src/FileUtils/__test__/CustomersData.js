@@ -73,7 +73,7 @@ export const CUSTOMERS_COLS = [
   {
     headerName: 'identity',
     children: [
-      { field: 'birthday', type: ['date'], minValue: new Date('1900-01-01'), maxValue: new Date('2030-01-01') },
+      { field: 'birthday', type: ['date'], minValue: '01/01/1900', maxValue: '01/01/2030' },
       { field: 'height', type: ['number'], minValue: 0, maxValue: 2.5 },
     ],
   },
@@ -88,7 +88,7 @@ export const CUSTOMERS_COLS_DEPRECATED = [
     type: ['enum'],
     cellEditorParams: { enumValues: ['AppleJuice', 'Beer', 'OrangeJuice', 'Wine'] },
   },
-  { field: 'birthday', type: ['date'], minValue: new Date('1900-01-01'), maxValue: new Date('2030-01-01') },
+  { field: 'birthday', type: ['date'], minValue: '01/01/1900', maxValue: '01/01/2030' },
   { field: 'height', type: ['number'], minValue: 0, maxValue: 2.5 },
 ];
 
