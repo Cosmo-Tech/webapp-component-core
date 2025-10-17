@@ -95,8 +95,9 @@ const isValid = (dataStr, type, options, canBeEmpty = false) => {
       return isBool(dataStr) || forgeTypeError(dataStr, type, options);
     case 'date': {
       if (!options?.dateFormat) return forgeConfigError("Missing option dateFormat, can't perform date validation.");
-      if (!isDate(dataStr, options?.dateFormat)) return forgeTypeError(dataStr, type, options);
+
       const valueAsDate = DateUtils.parse(dataStr, options?.dateFormat);
+      if (isNaN(valueAsDate.getTime())) return forgeTypeError(dataStr, type, options);
       return isDateInRange(valueAsDate, options?.minValue, options?.maxValue, options?.dateFormat);
     }
     case 'enum':
