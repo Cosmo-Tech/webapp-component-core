@@ -83,6 +83,30 @@ describe('parse valid CSV strings', () => {
   });
 });
 
+describe('regression: invalid number values should trigger validation errors', () => {
+  const options = { dateFormat: 'dd/MM/yyyy' };
+
+  test('should raise error for bad integer value in age column', () => {
+    const headerCols = AgGridUtils.getFlattenColumnsWithoutGroups(CUSTOMERS_COLS).map((col) => col.field);
+
+    const invalidRow = headerCols.map((field) => {
+      if (field === 'age') return 'bad_int';
+      if (field === 'birthday') return '03/05/1978';
+      if (field === 'height') return '1.7';
+      return '';
+    });
+
+    const csvData = [headerCols, invalidRow];
+    const csvStr = csvData.map((row) => row.join(',')).join('\n');
+
+    const result = AgGridUtils.fromCSV(csvStr, true, CUSTOMERS_COLS, options);
+
+    expect(result.error).toBeDefined();
+    expect(result.error.length).toBeGreaterThan(0);
+    expect(result.error[0].summary.toLowerCase()).toMatch(/(type|incorrect|int|empty)/);
+  });
+});
+
 describe('parse with invalid parameters', () => {
   test('missing fields definition', () => {
     const res = AgGridUtils.fromCSV('', false, undefined);

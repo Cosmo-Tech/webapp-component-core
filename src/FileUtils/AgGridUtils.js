@@ -1,5 +1,6 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
+import DateUtils from '../DateUtils/DateUtils';
 import { ValidationUtils } from '../ValidationUtils';
 import { Error as PanelError } from '../models';
 import CSV from './CSVUtils';
@@ -86,38 +87,50 @@ const _getColTypeFromTypeArray = (typeArray) => {
 };
 
 const _validateFormat = (rows, hasHeader, cols, options) => {
-  const colsData = cols.map((col) => ({ ...col, type: _getColTypeFromTypeArray(col.type) }));
   const errors = [];
-  const knownColsCount = colsData.length;
+  const knownColsCount = cols.length;
   const startIndex = hasHeader ? 1 : 0;
+
+  const colMeta = cols.map((col) => ({
+    field: col.field,
+    type: _getColTypeFromTypeArray(col.type),
+    acceptsEmptyFields: col.acceptsEmptyFields ?? col.cellEditorParams?.acceptsEmptyFields ?? false,
+    colOptions: {
+      ...options,
+      enumValues: col.enumValues ?? col.cellEditorParams?.enumValues,
+      minValue: col.minValue,
+      maxValue: col.maxValue,
+    },
+  }));
+  // For date columns, convert min & max values to do it only once
+  colMeta.forEach((col) => {
+    if (col.type === 'date' && options?.dateFormat) {
+      const colOptions = col.colOptions;
+      if (colOptions.minValue != null) colOptions.minDate = DateUtils.parse(colOptions.minValue, options?.dateFormat);
+      if (colOptions.maxValue != null) colOptions.maxDate = DateUtils.parse(colOptions.maxValue, options?.dateFormat);
+    }
+  });
+
   for (let rowIndex = startIndex; rowIndex < rows.length; rowIndex++) {
     const row = rows[rowIndex];
     while (row[row.length - 1] === undefined && row.length > knownColsCount) row.pop();
-    if (row.length !== knownColsCount || row.includes(undefined))
-      _forgeColumnsCountError(row, rowIndex + 1, colsData, errors);
-    row.forEach((rowCell, colIndex) => {
-      if (colIndex < knownColsCount) {
-        const colType = colsData[colIndex].type;
-        if (colType && rowCell !== undefined) {
-          // use of cellEditorParams is deprecated
-          const colOptions = {
-            ...options,
-            enumValues: colsData[colIndex]?.enumValues ?? colsData[colIndex]?.cellEditorParams?.enumValues,
-            minValue: colsData[colIndex]?.minValue,
-            maxValue: colsData[colIndex]?.maxValue,
-          };
-          const acceptsEmptyFields =
-            // use of cellEditorParams is deprecated
-            colsData[colIndex].acceptsEmptyFields ?? colsData[colIndex].cellEditorParams?.acceptsEmptyFields ?? false;
-          const validationResult = ValidationUtils.isValid(rowCell, colType, colOptions, acceptsEmptyFields);
-          if (validationResult !== true) {
-            const { summary: errorSummary, context: errorContext } = validationResult;
-            const errorLoc = `Line ${rowIndex + 1}, Column ${colIndex + 1} ("${colsData[colIndex].field}")`;
-            errors.push(new PanelError(errorSummary, errorLoc, errorContext));
-          }
-        }
+
+    if (row.length !== knownColsCount || row.includes(undefined)) {
+      _forgeColumnsCountError(row, rowIndex + 1, cols, errors);
+    }
+
+    for (let colIndex = 0; colIndex < knownColsCount; colIndex++) {
+      const { type, colOptions, acceptsEmptyFields, field } = colMeta[colIndex];
+      const value = row[colIndex];
+      if (value === undefined) continue;
+
+      const validationResult = ValidationUtils.isValid(value, type, colOptions, acceptsEmptyFields);
+      if (validationResult !== true) {
+        const { summary: errorSummary, context: errorContext } = validationResult;
+        const errorLoc = `Line ${rowIndex + 1}, Column ${colIndex + 1} ("${field}")`;
+        errors.push(new PanelError(errorSummary, errorLoc, errorContext));
       }
-    });
+    }
   }
 
   return errors;
