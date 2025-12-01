@@ -1,3 +1,14 @@
+## **2.0.2**&emsp;<sub><sup>2025-12-01 (d61abd...1d4266)</sup></sub>
+
+### Performance Improvements
+
+- improve performance of CSV file upload in Tables
+
+### Dependencies
+
+- revert @azure/msal-browser upgrade, setting it back from v4 to v3
+- update dependencies
+
 ## **2.0.1** <sub><sup>2025-09-19 (7021d37...40b3c7f)</sup></sub>
 
 ### Bug Fixes
