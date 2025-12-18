@@ -1,3 +1,13 @@
+## **3.0.0-dev.0** <sub><sup>2025-12-18 (af12362...205fc96)</sup></sub>
+
+### BREAKING CHANGES
+
+- @azure/msal\-browser upgraded from v3 to v4 ([246df91](https://github.com/Cosmo-Tech/webapp-component-core/commit/246df91))
+
+### Dependencies
+
+- update dependencies
+
 ## **2.0.2**&emsp;<sub><sup>2025-12-01 (d61abd...1d4266)</sup></sub>
 
 ### Performance Improvements
