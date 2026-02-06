@@ -1,4 +1,4 @@
-## **3.0.0-dev.0** <sub><sup>2025-12-18 (af12362...205fc96)</sup></sub>
+## **3.0.0** <sub><sup>2026-02-06</sup></sub>
 
 ### BREAKING CHANGES
 
