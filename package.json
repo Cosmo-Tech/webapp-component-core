@@ -61,5 +61,8 @@
     "validator": "^13.15.26",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
+  "resolutions": {
+    "glob": "^13.0.1"
+  },
   "packageManager": "yarn@4.9.4"
 }
