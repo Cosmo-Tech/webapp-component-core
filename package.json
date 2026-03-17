@@ -30,7 +30,6 @@
     "@eslint/js": "^10.0.1",
     "@rollup/plugin-babel": "^7.0.0",
     "@rollup/plugin-commonjs": "^29.0.2",
-    "@rollup/plugin-image": "^3.0.3",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "eslint": "^10.0.3",
@@ -44,12 +43,9 @@
     "globals": "^17.4.0",
     "jest": "^30.3.0",
     "neostandard": "^0.13.0",
-    "postcss": "^8.5.8",
     "prettier": "^3.8.1",
     "rollup": "^4.59.0",
     "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-postcss": "^4.0.2",
-    "rollup-plugin-visualizer": "^6.0.11",
     "timezone-mock": "^1.4.2"
   },
   "dependencies": {
