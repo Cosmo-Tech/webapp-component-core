@@ -58,7 +58,9 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "resolutions": {
-    "glob": "^13.0.1"
+    "flatted": "^3.4.0",
+    "glob": "^13.0.1",
+    "tar": "^7.5.10"
   },
   "packageManager": "yarn@4.9.4"
 }
