@@ -60,13 +60,14 @@ const redirectOnAuthSuccess = () => {
   window.location.href = config?.msalConfig?.auth?.redirectUri ?? '/';
 };
 
-const _acquireTokensByRequestAndAccount = async (tokenReq, account) => {
+const _acquireTokensByRequestAndAccount = async (tokenReq, account, forceRefresh = false) => {
   if (!tokenReq) {
     console.warn('No token request provided');
     tokenReq = {};
   }
 
   tokenReq.account = account;
+  tokenReq.forceRefresh ??= forceRefresh;
   return await msalApp
     .acquireTokenSilent(tokenReq)
     .then((tokenRes) => tokenRes)
@@ -104,7 +105,7 @@ export const acquireTokens = async (forceRefresh = false) => {
   const account = getActiveAccountFromMSAL();
   if (account === undefined) return;
 
-  const tokens = await _acquireTokensByRequestAndAccount(config.accessRequest, account);
+  const tokens = await _acquireTokensByRequestAndAccount(config.accessRequest, account, forceRefresh);
   _updateTokensInStorage(tokens);
   return tokens;
 };
