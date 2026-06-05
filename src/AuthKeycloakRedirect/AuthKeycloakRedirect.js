@@ -38,18 +38,13 @@ const checkInit = () => {
 
 const getActiveAccountFromMSAL = () => {
   const accountId = readFromStorage('authAccountId');
-  if (!accountId) {
-    return;
-  }
-  const allAccounts = msalApp.getAllAccounts();
-  if (!allAccounts.length === 0) {
-    console.warn('WARNING: no accounts found, please log in');
-    return;
-  }
+  if (!accountId) return;
 
-  const account = allAccounts.find((account) => account.homeAccountId === accountId);
-  if (account === undefined) {
-    console.warn(`WARNING: no account found with id "${accountId}", cannot retrieve account`);
+  const expectedAccountEnvironment = new URL(config?.msalConfig?.auth?.authority)?.hostname;
+  const accountFilter = { homeAccountId: accountId, environment: expectedAccountEnvironment };
+  const account = msalApp.getAccount(accountFilter);
+  if (account == null) {
+    console.warn(`WARNING: no account found with the provided account filter`);
     return;
   }
 
@@ -103,7 +98,7 @@ export const acquireTokens = async (forceRefresh = false) => {
   }
 
   const account = getActiveAccountFromMSAL();
-  if (account === undefined) return;
+  if (account == null) return;
 
   const tokens = await _acquireTokensByRequestAndAccount(config.accessRequest, account, forceRefresh);
   _updateTokensInStorage(tokens);
@@ -140,18 +135,21 @@ export const signIn = () => {
   return msalApp.handleRedirectPromise().then(handleResponse);
 };
 
-export const signOut = () => {
-  if (!checkInit()) return;
-
-  const accountId = readFromStorage('authAccountId');
-  const idToken = readFromStorage('authIdToken');
-
+const clearStorageSessionData = () => {
   clearFromStorage('authIdTokenPopup');
   clearFromStorage('authIdToken');
   clearFromStorage('authAccessToken');
   clearFromStorage('authAccountId');
   clearFromStorage('authEmail');
   writeToStorage('authAuthenticated', 'false');
+};
+
+export const signOut = () => {
+  if (!checkInit()) return;
+
+  const accountId = readFromStorage('authAccountId');
+  const idToken = readFromStorage('authIdToken');
+  clearStorageSessionData();
 
   const logoutRequest = {
     account: msalApp.getAccountByHomeId(authData.accountId ?? accountId),
@@ -205,12 +203,16 @@ const _extractRolesFromAccessToken = (accessToken) => {
 
 export const isUserSignedIn = async () => {
   if (readFromStorage('authAuthenticated') === 'true') {
-    // Restore roles from access token if necessary (roles in auhtData may be lost after login redirection)
-    if (authData.roles.length === 0) {
-      const accessToken = readFromStorage('authAccessToken');
-      if (accessToken) authData.roles = _extractRolesFromAccessToken(accessToken);
+    if (getActiveAccountFromMSAL() != null) {
+      // Restore roles from access token if necessary (roles in authData may be lost after login redirection)
+      if (authData.roles.length === 0) {
+        const accessToken = readFromStorage('authAccessToken');
+        if (accessToken) authData.roles = _extractRolesFromAccessToken(accessToken);
+      }
+      return true;
     }
-    return true;
+    // No valid session found despite authAuthenticated being true, clear local session data before resuming
+    clearStorageSessionData();
   }
 
   try {
