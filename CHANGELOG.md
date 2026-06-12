@@ -1,3 +1,10 @@
+## **3.0.3** <sub><sup>2026-06-12 (63c2021...af68163)</sup></sub>
+
+### Bug Fixes
+
+- fix token refresh for AuthKeycloakRedirect client ([743624f](https://github.com/Cosmo-Tech/webapp-component-core/commit/743624f))
+- fix auth client sometimes trying to use session data from a different environment ([dfc2c8a](https://github.com/Cosmo-Tech/webapp-component-core/commit/dfc2c8a))
+
 ## **3.0.2** <sub><sup>2026-03-17 (5857355...ea30404)</sup></sub>
 
 - update dependencies
