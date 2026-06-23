@@ -2,7 +2,7 @@
 // Licensed under the MIT license.
 
 function readFromStorage(key) {
-  return localStorage.getItem(key);
+  return sessionStorage.getItem(key);
 }
 
 const name = 'auth-dev';

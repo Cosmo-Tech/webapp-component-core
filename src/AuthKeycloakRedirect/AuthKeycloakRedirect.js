@@ -2,11 +2,9 @@
 // Licensed under the MIT license.
 import * as msal from '@azure/msal-browser';
 
-// Note: local storage works on Chromium but not on Firefox if "Delete cookies and site data when Firefox is closed" is
-// selected (for more details, see https://bugzilla.mozilla.org/show_bug.cgi?id=1453699)
-const writeToStorage = (key, value) => localStorage.setItem(key, value);
-const readFromStorage = (key) => localStorage.getItem(key);
-const clearFromStorage = (key) => localStorage.removeItem(key);
+const writeToStorage = (key, value) => sessionStorage.setItem(key, value);
+const readFromStorage = (key) => sessionStorage.getItem(key);
+const clearFromStorage = (key) => sessionStorage.removeItem(key);
 
 export const name = 'auth-keycloakRedirect';
 const authData = {
