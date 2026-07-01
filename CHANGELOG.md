@@ -1,3 +1,9 @@
+## **4.0.0** <sub><sup>2026-07-01 (8deb131...ab65600)</sup></sub>
+
+### BREAKING CHANGES ([8deb131](https://github.com/Cosmo-Tech/webapp-component-core/commit/8deb131))
+
+- for all auth providers, authentication data will now be stored in sessionStorage instead of localStorage
+
 ## **3.0.3** <sub><sup>2026-06-12 (63c2021...af68163)</sup></sub>
 
 ### Bug Fixes
