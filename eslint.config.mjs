@@ -2,6 +2,7 @@ import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import jest from 'eslint-plugin-jest';
 import prettier from 'eslint-plugin-prettier';
+import sonarjs from 'eslint-plugin-sonarjs';
 import globals from 'globals';
 import neostandard from 'neostandard';
 import path from 'node:path';
@@ -21,11 +22,17 @@ export default [
     ignores: ['**/build', '**/dist', '**/.docz', '**/.github', '**/node_modules'],
   },
   ...neostandardConfig,
-  ...compat.extends('plugin:jest/recommended', 'prettier', 'plugin:prettier/recommended'),
+  ...compat.extends(
+    'plugin:jest/recommended',
+    'prettier',
+    'plugin:prettier/recommended',
+    'plugin:sonarjs/recommended-legacy'
+  ),
   {
     plugins: {
       prettier,
       jest,
+      sonarjs,
     },
 
     languageOptions: {
@@ -41,6 +48,7 @@ export default [
 
     rules: {
       'no-constant-binary-expression': 'error',
+      'sonarjs/todo-tag': 0,
       semi: [2, 'always'],
 
       'max-len': [
