@@ -33,6 +33,7 @@ const read = async (fileBlob, forceStr, emptyCols, cols, options, hasHeader) => 
     const worksheet = workbook.Sheets[worksheetName];
     data = XLSX.utils.sheet_to_json(worksheet, emptyCols ? { header: 1, defval: '' } : { header: 1 });
   } catch (err) {
+    console.error(err);
     throw new Error("Can't parse file. Please provide a valid XLSX file.");
   }
   if (forceStr) {

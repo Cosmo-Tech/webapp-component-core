@@ -54,7 +54,7 @@ describe('parse valid CSV strings', () => {
     ${false}  | ${CUSTOMERS_COLS_DEPRECATED}
   `('empty CSV string with hasHeader="$hasHeader" and cols="$cols"', ({ hasHeader, cols }) => {
     const res = AgGridUtils.fromCSV('', hasHeader, cols, options);
-    expect(res.error).toStrictEqual(undefined);
+    expect(res.error).toBeUndefined();
     expect(res.cols).toStrictEqual([]);
     expect(res.rows).toStrictEqual([]);
     warn.mockReset();
@@ -77,7 +77,7 @@ describe('parse valid CSV strings', () => {
     ${csvWithoutHeaderStr} | ${false}  | ${CUSTOMERS_COLS} | ${COMPLEX_AGGRID_FORMATTED_ROWS}    | ${flattenCols}
   `('$#: with hasHeader="$hasHeader" and cols="$cols"', ({ dataStr, hasHeader, cols, expectedRows, expectedCols }) => {
     const res = AgGridUtils.fromCSV(dataStr, hasHeader, cols, options);
-    expect(res.error).toStrictEqual(undefined);
+    expect(res.error).toBeUndefined();
     expect(res.cols).toStrictEqual(expectedCols);
     expect(res.rows).toStrictEqual(expectedRows);
   });
@@ -129,8 +129,8 @@ describe('parse invalid CSV strings', () => {
   `('with hasHeader="$hasHeader" and cols="$cols"', ({ dataStr, hasHeader, cols, expectedErrors }) => {
     const res = AgGridUtils.fromCSV(dataStr, hasHeader, cols, options);
     expect(res.error).toStrictEqual(expectedErrors);
-    expect(res.cols).toStrictEqual(undefined);
-    expect(res.rows).toStrictEqual(undefined);
+    expect(res.cols).toBeUndefined();
+    expect(res.rows).toBeUndefined();
   });
 });
 

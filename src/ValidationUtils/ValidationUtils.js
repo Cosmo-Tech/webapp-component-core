@@ -1,6 +1,8 @@
 // Copyright (c) Cosmo Tech.
 // Licensed under the MIT license.
-import validator from 'validator';
+import isBooleanValidator from 'validator/lib/isBoolean';
+import isIntValidator from 'validator/lib/isInt';
+import isNumericValidator from 'validator/lib/isNumeric';
 import { DateUtils } from '../DateUtils';
 import { Error as PanelError } from '../models';
 
@@ -20,7 +22,7 @@ const forgeConfigError = (errorContext) => {
 };
 
 const isBool = (dataStr) => {
-  return validator.isBoolean(dataStr, { loose: true });
+  return isBooleanValidator(dataStr, { loose: true });
 };
 
 const isDate = (dataStr, dateFormat) => {
@@ -32,11 +34,11 @@ const isEnum = (dataStr, enumValues) => {
 };
 
 const isInt = (dataStr) => {
-  return validator.isInt(dataStr);
+  return isIntValidator(dataStr);
 };
 
 const isNumber = (dataStr) => {
-  return validator.isNumeric(dataStr);
+  return isNumericValidator(dataStr);
 };
 
 const isString = (data) => {
