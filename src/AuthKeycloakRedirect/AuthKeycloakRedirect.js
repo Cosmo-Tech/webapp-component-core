@@ -199,45 +199,53 @@ const _extractRolesFromAccessToken = (accessToken) => {
   return [];
 };
 
-export const isUserSignedIn = async () => {
-  if (readFromStorage('authAuthenticated') === 'true') {
-    if (getActiveAccountFromMSAL() != null) {
-      // Restore roles from access token if necessary (roles in authData may be lost after login redirection)
-      if (authData.roles.length === 0) {
-        const accessToken = readFromStorage('authAccessToken');
-        if (accessToken) authData.roles = _extractRolesFromAccessToken(accessToken);
-      }
-      return true;
-    }
+const hasValidStoredSession = () => {
+  if (readFromStorage('authAuthenticated') !== 'true') return false;
+  if (getActiveAccountFromMSAL() == null) {
     // No valid session found despite authAuthenticated being true, clear local session data before resuming
     clearStorageSessionData();
+    return false;
   }
+
+  // Restore roles from access token if necessary (roles in authData may be lost after login redirection)
+  if (authData.roles.length === 0) {
+    const accessToken = readFromStorage('authAccessToken');
+    if (accessToken) authData.roles = _extractRolesFromAccessToken(accessToken);
+  }
+  return true;
+};
+
+const resumeRedirectInteraction = () => {
+  if (readFromStorage('authInteractionInProgress') !== name) return;
+  clearFromStorage('authInteractionInProgress');
+
+  const locationHashParameters = new URLSearchParams(window.location.hash.substring(1));
+  if (!locationHashParameters.has('state')) return;
+
+  const configIssuer = config?.msalConfig?.auth?.authorityMetadata?.issuer;
+  const urlIssuer = locationHashParameters.get('iss');
+  if (urlIssuer === configIssuer) {
+    msalApp.handleRedirectPromise().then(handleResponse); // Resume redirect workflow process
+  } else if (urlIssuer) {
+    console.warn(`Issuer found in url "${urlIssuer}" does not match keycloak configuration: "${configIssuer}"`);
+  }
+};
+
+export const isUserSignedIn = async () => {
+  if (hasValidStoredSession()) return true;
 
   try {
     // Resume interaction if one is already in progress
-    if (readFromStorage('authInteractionInProgress') === name) {
-      clearFromStorage('authInteractionInProgress');
-
-      const locationHashParameters = new URLSearchParams(window.location.hash.substring(1));
-      if (locationHashParameters.has('state')) {
-        if (locationHashParameters.has('iss', config?.msalConfig?.auth?.authorityMetadata?.issuer)) {
-          msalApp.handleRedirectPromise().then(handleResponse); // Resume redirect workflow process
-        } else if (locationHashParameters.has('iss')) {
-          const configIssuer = config?.msalConfig?.auth?.authorityMetadata?.issuer;
-          const urlIssuer = locationHashParameters.get('iss');
-          console.warn(`Issuer found in url "${urlIssuer}" does not match keycloak configuration: "${configIssuer}"`);
-        }
-      }
-    }
+    resumeRedirectInteraction();
 
     // Otherwise, try to acquire a token silently to implement SSO
     const tokens = await acquireTokens();
     _updateTokensInStorage(tokens);
-    if (tokens?.accessToken !== undefined) return true;
+    return tokens?.accessToken !== undefined;
   } catch (e) {
     console.error(e);
+    return false;
   }
-  return false;
 };
 
 export const refreshTokens = async () => {
